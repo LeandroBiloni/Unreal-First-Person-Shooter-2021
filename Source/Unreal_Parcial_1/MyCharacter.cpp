@@ -69,6 +69,6 @@ void AMyCharacter::MouseX(float f)
 
 void AMyCharacter::MouseY(float f)
 {
-	AddControllerPitchInput(f);
+	AddControllerYawInput(f);
 }
 

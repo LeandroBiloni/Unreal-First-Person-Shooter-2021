@@ -28,7 +28,6 @@ public:
 
 	void MoveForward(float f);
 	void MoveRight(float f);
-
 	void MouseX(float f);
 	void MouseY(float f);
 };
