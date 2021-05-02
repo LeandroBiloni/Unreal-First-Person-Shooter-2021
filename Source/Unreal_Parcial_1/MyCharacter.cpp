@@ -36,6 +36,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("MouseY", this, &AMyCharacter::MouseY);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
+	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::Shoot);
 }
 
 void AMyCharacter::MoveForward(float f)
@@ -70,5 +71,38 @@ void AMyCharacter::MouseX(float f)
 void AMyCharacter::MouseY(float f)
 {
 	AddControllerPitchInput(f);
+}
+
+void AMyCharacter::Shoot()
+{
+	UE_LOG(LogTemp, Warning,TEXT("Shoot check"));
+	/*if (bulletPrefab)
+	{
+		GetWorld()->SpawnActor<ABullet>(bulletPrefab, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
+		UE_LOG(LogTemp, Warning, TEXT("Bullet Spawned"));
+	}*/
+
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+	MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
+
+	FVector MuzzleLoaction = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+
+	FRotator MuzzleRotation = CameraRotation;
+
+	UWorld* World = GetWorld();
+
+	if (World)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
+
+		
+	}
 }
 

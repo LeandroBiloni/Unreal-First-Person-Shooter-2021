@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Bullet.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
@@ -14,6 +15,11 @@ class UNREAL_PARCIAL_1_API AMyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector MuzzleOffset;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ABullet> bulletPrefab;
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,4 +36,5 @@ public:
 	void MoveRight(float f);
 	void MouseX(float f);
 	void MouseY(float f);
+	void Shoot();
 };
