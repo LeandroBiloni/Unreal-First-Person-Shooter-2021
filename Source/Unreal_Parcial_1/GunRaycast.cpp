@@ -46,3 +46,11 @@ void UGunRaycast::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	DrawDebugLine(GetWorld(), viewPoint, finalPosition, FColor::Red, false, -1.0f, 0.0f, 10.0f);
 }
 
+void UGunRaycast::Shoot()
+{
+	if (bulletPrefab) 
+	{
+		GetWorld()->SpawnActor<ABullet>(bulletPrefab, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
+	}
+}
+

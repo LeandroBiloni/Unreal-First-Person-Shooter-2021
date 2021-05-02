@@ -4,6 +4,7 @@
 
 #include "Engine.h"
 #include "Engine/World.h"
+#include "Bullet.h"
 #include "Components/ActorComponent.h"
 #include "GunRaycast.generated.h"
 
@@ -24,6 +25,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float distance;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ABullet> bulletPrefab;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -32,5 +36,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+		void Shoot();
 		
 };
