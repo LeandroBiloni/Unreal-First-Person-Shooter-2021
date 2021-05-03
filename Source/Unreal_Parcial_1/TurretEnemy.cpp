@@ -32,10 +32,6 @@ void ATurretEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	LookTarget();
-
-	
-
 	if (canShoot == false) 
 	{
 		timer = timer + DeltaTime;
@@ -47,11 +43,15 @@ void ATurretEnemy::Tick(float DeltaTime)
 		}
 	}
 
-	if (InSight(player->GetActorLocation()) &&  canShoot) 
+	if (InSight(player->GetActorLocation()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CAMBIO A SHOOT"));
-		Shoot();
-		canShoot = false;
+		LookTarget();
+		if (canShoot)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CAMBIO A SHOOT"));
+				Shoot();
+				canShoot = false;
+		}
 	}
 }
 
@@ -98,9 +98,9 @@ bool ATurretEnemy::InSight(FVector playerPos)
 	FCollisionQueryParams params = FCollisionQueryParams(TEXT(""), false, GetOwner());
 
 	FVector offset = FVector(0.0f, 200.0f, 0.0f);
-	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetComponentLocation() + (dirToPlayer * attackRange), ECollisionChannel::ECC_PhysicsBody, params);
+	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetForwardVector() * attackRange, ECollisionChannel::ECC_PhysicsBody, params);
 
-	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetComponentLocation() + (dirToPlayer * attackRange), FColor::Red, false, -1.0f, 0.0f, 10.0f);
+	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetForwardVector() * attackRange, FColor::Red, false, -1.0f, 0.0f, 10.0f);
 	if (hit.GetActor() != player) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NO ES PLAYER"));
