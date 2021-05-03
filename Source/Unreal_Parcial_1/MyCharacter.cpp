@@ -76,11 +76,6 @@ void AMyCharacter::MouseY(float f)
 void AMyCharacter::Shoot()
 {
 	UE_LOG(LogTemp, Warning,TEXT("Shoot check"));
-	/*if (bulletPrefab)
-	{
-		GetWorld()->SpawnActor<ABullet>(bulletPrefab, GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
-		UE_LOG(LogTemp, Warning, TEXT("Bullet Spawned"));
-	}*/
 
 	FVector CameraLocation;
 	FRotator CameraRotation;
@@ -101,8 +96,11 @@ void AMyCharacter::Shoot()
 		SpawnParams.Instigator = GetInstigator();
 
 		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
-
-		
 	}
+}
+
+void AMyCharacter::TakeDamage(int damage)
+{
+	currentLife -= damage;
 }
 

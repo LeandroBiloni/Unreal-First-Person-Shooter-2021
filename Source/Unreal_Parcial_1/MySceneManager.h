@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Engine.h"
+#include "Engine/World.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
 #include "MySceneManager.generated.h"
 
@@ -15,6 +17,9 @@ public:
 	// Sets default values for this pawn's properties
 	AMySceneManager();
 
+	UPROPERTY(EditAnywhere)
+		TArray<UObject*> enemies;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,5 +30,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void Restart();
+	void LoadNextLevel();
+	void Win();
+	void Lose();
 
 };

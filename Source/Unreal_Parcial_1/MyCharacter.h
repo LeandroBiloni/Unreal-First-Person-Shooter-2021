@@ -16,6 +16,9 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 
+	int maxLife;
+	int currentLife;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 	UPROPERTY(EditAnywhere)
@@ -37,4 +40,6 @@ public:
 	void MouseX(float f);
 	void MouseY(float f);
 	void Shoot();
+
+	void TakeDamage(int damage);
 };

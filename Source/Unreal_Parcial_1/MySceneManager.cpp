@@ -30,5 +30,25 @@ void AMySceneManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AMySceneManager::Restart);
 }
 
+void AMySceneManager::Restart()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
+}
+
+void AMySceneManager::LoadNextLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lvl2");
+}
+
+void AMySceneManager::Win()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Win");
+}
+
+void AMySceneManager::Lose()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lose");
+}
