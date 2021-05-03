@@ -25,6 +25,9 @@ void ATurretEnemy::BeginPlay()
 	Super::BeginPlay();
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	canShoot = true;
+
+	if (bulletPrefab)
+		UE_LOG(LogTemp, Warning, TEXT("TENGO BULLET turret"));
 }
 
 // Called every frame
@@ -100,7 +103,7 @@ bool ATurretEnemy::InSight(FVector playerPos)
 	FVector offset = FVector(0.0f, 200.0f, 0.0f);
 	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetForwardVector() * attackRange, ECollisionChannel::ECC_PhysicsBody, params);
 
-	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetForwardVector() * attackRange, FColor::Red, false, -1.0f, 0.0f, 10.0f);
+	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetComponentLocation() + spawn->GetForwardVector() * attackRange, FColor::Red, false, -1.0f, 0.0f, 10.0f);
 	if (hit.GetActor() != player) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NO ES PLAYER"));

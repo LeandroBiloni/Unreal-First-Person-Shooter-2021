@@ -3,10 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine.h"
-#include "Engine/World.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "Bullet.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
@@ -29,9 +25,13 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
+	UPROPERTY(EditDefaultsOnly, Category = "Level name")
+	FName LevelA;
+	UPROPERTY(EditDefaultsOnly, Category = "Level name")
+	FName LevelB;
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -44,7 +44,10 @@ public:
 	void MouseY(float f);
 	void Shoot();
 
-	//void Restart();
+	UFUNCTION(BlueprintImplementableEvent)
+		void ChangeLevel(const FName& LvlToChange);
+
+	void RestartThisLevel();
 
 	void TakeDamage(int damage);
 };

@@ -2,7 +2,7 @@
 
 
 #include "MyCharacter.h"
-
+#include "Bullet.h"
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
@@ -15,7 +15,18 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	/*if (bulletPrefab == nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("NO TENGO BALA"));*/
+	UE_LOG(LogTemp, Warning, TEXT("BeginPlayWorks"));
+
+	if (bulletPrefab != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BulletPrefab is Set"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("BulletPrefab is a NULL POINTER"));
+	}
 }
 
 // Called every frame
@@ -37,7 +48,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::Shoot);
-	//PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AMyCharacter::Restart);
+	PlayerInputComponent->BindAction("RestartButton", IE_Pressed, this, &AMyCharacter::RestartThisLevel);
 }
 
 void AMyCharacter::MoveForward(float f)
@@ -98,13 +109,14 @@ void AMyCharacter::Shoot()
 	}
 }
 
-/*void AMyCharacter::Restart()
-{
-	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
-}*/
 
 void AMyCharacter::TakeDamage(int damage)
 {
 	currentLife -= damage;
+}
+
+void AMyCharacter::RestartThisLevel() 
+{
+	ChangeLevel(LevelB);
 }
 
