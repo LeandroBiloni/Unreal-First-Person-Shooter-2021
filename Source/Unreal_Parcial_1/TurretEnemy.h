@@ -25,6 +25,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* cannon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* spawn;
 
 	AActor* player;
 	UPROPERTY(EditAnywhere)
@@ -38,6 +40,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float attackRange;
+
+	UPROPERTY(EditAnywhere)
+		float attackAngle;
 
 	UPROPERTY(EditAnywhere)
 		float attackSpeed;
@@ -54,4 +59,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void LookTarget();
 	void Shoot();
+	bool InSight(FVector playerPos);
 };

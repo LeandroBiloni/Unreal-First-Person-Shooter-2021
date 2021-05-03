@@ -14,6 +14,9 @@ ATurretEnemy::ATurretEnemy()
 
 	cannon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("cannon"));
 	cannon->SetupAttachment(turretBody);
+
+	spawn = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("spawn"));
+	spawn->SetupAttachment(cannon);
 }
 
 // Called when the game starts or when spawned
@@ -31,8 +34,7 @@ void ATurretEnemy::Tick(float DeltaTime)
 
 	LookTarget();
 
-	FVector playerPos = player->GetActorLocation();
-	FVector myPos = GetActorLocation();
+	
 
 	if (canShoot == false) 
 	{
@@ -45,17 +47,12 @@ void ATurretEnemy::Tick(float DeltaTime)
 		}
 	}
 
-	if ((myPos - playerPos).Size() <= attackRange) 
+	if (InSight(player->GetActorLocation()) &&  canShoot) 
 	{
-		if (canShoot) 
-		{
-			UE_LOG(LogTemp, Warning, TEXT("CAMBIO A SHOOT"));
-			Shoot();
-			canShoot = false;
-		}
-		
+		UE_LOG(LogTemp, Warning, TEXT("CAMBIO A SHOOT"));
+		Shoot();
+		canShoot = false;
 	}
-	else UE_LOG(LogTemp, Warning, TEXT("FUERA DE RANGO"));
 }
 
 void ATurretEnemy::LookTarget()
@@ -68,22 +65,49 @@ void ATurretEnemy::LookTarget()
 void ATurretEnemy::Shoot()
 {
 	AActor* actor = this;
-	//FVector forward = GetActorForwardVector();
-	//FVector bulletSpawn = forward + spawnOffset;
 	UWorld* world = GetWorld();
 
 	if (world) 
 	{
-		if (bulletPrefab)
-			UE_LOG(LogTemp, Warning, TEXT("TENGO UNA BALA"));
-
-		if (actor)
-			UE_LOG(LogTemp, Warning, TEXT("TENGO UN ACTOR"));
-
-
-
 		UE_LOG(LogTemp, Warning, TEXT("INSTANCIO BALA"));
+
 		world->SpawnActor<ABullet>(bulletPrefab, cannon->GetComponentLocation(), cannon->GetComponentRotation());
 	}
+}
+
+bool ATurretEnemy::InSight(FVector playerPos)
+{
+	FVector myPos = GetActorLocation();
+	float distToPlayer = (myPos - playerPos).Size();
+
+	if (distToPlayer > attackRange) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FUERA DE RANGO"));
+		return false;
+	}
+
+	FVector dirToPlayer = (myPos - playerPos).GetSafeNormal();
+	if (FVector::DotProduct(this->GetActorForwardVector(), dirToPlayer) > attackAngle / 2) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FUERA DE ANGULO"));
+		return false;
+	}
+
+	FHitResult hit;
+
+	FCollisionQueryParams params = FCollisionQueryParams(TEXT(""), false, GetOwner());
+
+	FVector offset = FVector(0.0f, 200.0f, 0.0f);
+	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetComponentLocation() + (dirToPlayer * attackRange), ECollisionChannel::ECC_PhysicsBody, params);
+
+	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetComponentLocation() + (dirToPlayer * attackRange), FColor::Red, false, -1.0f, 0.0f, 10.0f);
+	if (hit.GetActor() != player) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO ES PLAYER"));
+		return false;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("PLAYER INSIGHT"));
+	return true;
 }
 
