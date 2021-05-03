@@ -37,11 +37,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::Shoot);
+	//PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AMyCharacter::Restart);
 }
 
 void AMyCharacter::MoveForward(float f)
 {
-	//AddMovementInput(GetActorForwardVector(), f);
 	if (Controller && f != 0.0)
 	{
 		FRotator rot = Controller->GetControlRotation();
@@ -53,7 +53,6 @@ void AMyCharacter::MoveForward(float f)
 
 void AMyCharacter::MoveRight(float f)
 {
-	//AddMovementInput(GetActorRightVector(), f);
 	if (Controller && f != 0.0)
 	{
 		FRotator rot = Controller->GetControlRotation();
@@ -98,6 +97,11 @@ void AMyCharacter::Shoot()
 		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
 	}
 }
+
+/*void AMyCharacter::Restart()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
+}*/
 
 void AMyCharacter::TakeDamage(int damage)
 {

@@ -3,6 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
+#include "Engine/World.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Bullet.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
@@ -40,6 +43,8 @@ public:
 	void MouseX(float f);
 	void MouseY(float f);
 	void Shoot();
+
+	//void Restart();
 
 	void TakeDamage(int damage);
 };
