@@ -8,12 +8,7 @@
 # include "Bullet.h"
 #include "TurretEnemy.generated.h"
 
-UENUM()
-enum class EBehavioursEnemy : uint8
-{
-	BE_Shoot UMETA(DisplayName = "Shoot"),
-	BE_LookAt UMETA(DisplayName = "LookAt")
-};
+
 
 UCLASS()
 class UNREAL_PARCIAL_1_API ATurretEnemy : public AActor
@@ -25,10 +20,15 @@ public:
 	// Sets default values for this actor's properties
 	ATurretEnemy();
 
-	AActor* player;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* turretBody;
 
-	UPROPERTY(EditAnywhere, Category = Enum)
-		EBehavioursEnemy myEnum;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* cannon;
+
+	AActor* player;
+	UPROPERTY(EditAnywhere)
+		class UStaticMeshComponent* CannonComp;
 
 	UPROPERTY(EditAnywhere)
 		float rotationSpeed;
@@ -43,6 +43,8 @@ public:
 		float attackSpeed;
 
 	float timer;
+
+	bool canShoot;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
