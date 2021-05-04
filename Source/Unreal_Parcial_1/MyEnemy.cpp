@@ -96,5 +96,6 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 void GetDamage(int damage)
 {
 	CurrentLife -= damage;
+	UE_LOG(LogTemp, Warning, TEXT("I got hit"));
 }
 
