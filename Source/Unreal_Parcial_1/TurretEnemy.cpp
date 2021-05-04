@@ -25,9 +25,6 @@ void ATurretEnemy::BeginPlay()
 	Super::BeginPlay();
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	canShoot = true;
-
-	if (bulletPrefab)
-		UE_LOG(LogTemp, Warning, TEXT("TENGO BULLET turret"));
 }
 
 // Called every frame
@@ -51,7 +48,6 @@ void ATurretEnemy::Tick(float DeltaTime)
 		LookTarget();
 		if (canShoot)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("CAMBIO A SHOOT"));
 				Shoot();
 				canShoot = false;
 		}
@@ -72,8 +68,6 @@ void ATurretEnemy::Shoot()
 
 	if (world) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("INSTANCIO BALA"));
-
 		world->SpawnActor<ABullet>(bulletPrefab, cannon->GetComponentLocation(), cannon->GetComponentRotation());
 	}
 }
@@ -85,14 +79,12 @@ bool ATurretEnemy::InSight(FVector playerPos)
 
 	if (distToPlayer > attackRange) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FUERA DE RANGO"));
 		return false;
 	}
 
 	FVector dirToPlayer = (myPos - playerPos).GetSafeNormal();
 	if (FVector::DotProduct(this->GetActorForwardVector(), dirToPlayer) > attackAngle / 2) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FUERA DE ANGULO"));
 		return false;
 	}
 
@@ -106,11 +98,8 @@ bool ATurretEnemy::InSight(FVector playerPos)
 	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetComponentLocation() + spawn->GetForwardVector() * attackRange, FColor::Red, false, -1.0f, 0.0f, 10.0f);
 	if (hit.GetActor() != player) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NO ES PLAYER"));
 		return false;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("PLAYER INSIGHT"));
 	return true;
 }
 
