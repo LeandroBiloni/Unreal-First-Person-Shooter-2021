@@ -20,8 +20,7 @@ public:
 		float Speed;
 	UPROPERTY(EditAnywhere)
 		float Damage;
-
-	TSubclassOf <class AMyCharacter> MyPlayer;
+	AMyCharacter* MyPlayer;
 	UPROPERTY(EditAnywhere)
 		ATriggerVolume* MyTrigger;
 

@@ -2,7 +2,8 @@
 
 
 #include "Bullet.h"
-
+#include "Kismet/GameplayStatics.h"
+//#include "MyCharacter.h"
 // Sets default values
 ABullet::ABullet()
 {
@@ -16,7 +17,8 @@ void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	MyPlayer = CastChecked<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	MyPlayer = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 
 }
 
@@ -27,10 +29,10 @@ void ABullet::Tick(float DeltaTime)
 
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * DeltaTime);
 
-	if (MyTrigger->)
+	/*if (MyTrigger->)
 	{
 		MyPlayer->GetDamage(Damage);
-	}
+	}*/
 }
 
 void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
