@@ -16,6 +16,7 @@ void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MyPlayer = GetWorld()->GetFirstPlayerComponent()->GetPawn();
 }
 
 // Called every frame
@@ -23,6 +24,16 @@ void ABullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * speed * DeltaTime);
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * DeltaTime);
+
+	if (MyTrigger->IsOverlappingActor(MyPlayer))
+	{
+		MyPlayer->GetDamage(Damage);
+	}
 }
 
+void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+
+}

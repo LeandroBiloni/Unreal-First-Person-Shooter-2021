@@ -14,8 +14,9 @@ class UNREAL_PARCIAL_1_API AMyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();
-
+	UPROPERTY(EditAnywhere)
 	int maxLife;
+	UPROPERTY(EditAnywhere)
 	int currentLife;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -49,5 +50,5 @@ public:
 
 	void RestartThisLevel();
 
-	void TakeDamage(int damage);
+	void GetDamage(int damage);
 };

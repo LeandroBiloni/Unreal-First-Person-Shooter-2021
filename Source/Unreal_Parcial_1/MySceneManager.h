@@ -18,8 +18,8 @@ public:
 	// Sets default values for this pawn's properties
 	AMySceneManager();
 
-	UPROPERTY(EditAnywhere)
-		TArray<UObject*> enemies;
+	/*UPROPERTY(EditAnywhere)
+		TArray<UObject*> enemies;*/
 
 protected:
 	// Called when the game starts or when spawned

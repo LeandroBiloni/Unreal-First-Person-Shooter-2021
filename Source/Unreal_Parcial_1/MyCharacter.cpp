@@ -110,13 +110,13 @@ void AMyCharacter::Shoot()
 }
 
 
-void AMyCharacter::TakeDamage(int damage)
+void AMyCharacter::GetDamage(int damage)
 {
 	currentLife -= damage;
 }
 
 void AMyCharacter::RestartThisLevel() 
 {
-	ChangeLevel(LevelB);
+	ChangeLevel(LevelA);
 }
 
