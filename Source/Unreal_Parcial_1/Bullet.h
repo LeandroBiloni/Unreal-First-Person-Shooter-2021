@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
+#include "MyCharacter.h"
 #include "Bullet.generated.h"
 
 UCLASS()
@@ -20,7 +21,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		float Damage;
 
-	AActor* MyPlayer;
+	TSubclassOf <class AMyCharacter> MyPlayer;
 	UPROPERTY(EditAnywhere)
 		ATriggerVolume* MyTrigger;
 

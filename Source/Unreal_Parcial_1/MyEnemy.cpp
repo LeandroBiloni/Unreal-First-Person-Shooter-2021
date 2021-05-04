@@ -6,7 +6,7 @@
 // Sets default values
 AMyEnemy::AMyEnemy()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -28,7 +28,7 @@ void AMyEnemy::Tick(float DeltaTime)
 	ClosestObstacle = nullptr;
 	Sphere->GetOverlappingActors(Overlap);
 
-	for (&auto item : Overlap)
+	for (auto& item : Overlap)
 	{
 		MyBeginOverlap(item);
 	}
@@ -47,9 +47,14 @@ void AMyEnemy::Tick(float DeltaTime)
 	}
 }
 
+void AMyEnemy::GetDamage(int damage)
+{
+	CurrentLife -= damage;
+}
+
 void AMyEnemy::LookTarget()
 {
-	FVector dir = player->GetActorLocation() - GetActorLocation();
+	FVector dir = Player->GetActorLocation() - GetActorLocation();
 	dir.Z = 0;
 	SetActorRotation(dir.Rotation());
 }
@@ -57,45 +62,39 @@ void AMyEnemy::LookTarget()
 void AMyEnemy::FollowTarget(float deltaTime)
 {
 	LookTarget();
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * speed * deltaTime);
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
 void AMyEnemy::Avoidance(float deltaTime)
 {
-	FVector dir = (player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+	FVector dir = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 
-	if (closestObstacle)
-		dir += (GetActorLocation() - closestObstacle->GetActorLocation()).GetSafeNormal() * avoidWeight;
+	if (ClosestObstacle)
+		dir += (GetActorLocation() - ClosestObstacle->GetActorLocation()).GetSafeNormal() * AvoidWeight;
 
 	dir.Z = 0;
-	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, speedRot * deltaTime);
+	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
 
 	SetActorRotation(rot.Rotation());
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * speed * deltaTime);
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
 void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 {
-	if (overlapActor == this || overlapActor == player)
+	if (overlapActor == this || overlapActor == Player)
 		return;
 
-	if (closestObstacle)
+	if (ClosestObstacle)
 	{
-		FVector distA = closestObstacle->GetActorLocation() - GetActorLocation();
+		FVector distA = ClosestObstacle->GetActorLocation() - GetActorLocation();
 		FVector distB = overlapActor->GetActorLocation() - GetActorLocation();
 
 		if (distB.Size() < distA.Size())
 		{
-			closestObstacle = overlapActor;
+			ClosestObstacle = overlapActor;
 		}
 	}
 	else
-		closestObstacle = overlapActor;
-}
-
-void GetDamage(int damage)
-{
-	CurrentLife -= damage;
-	UE_LOG(LogTemp, Warning, TEXT("I got hit"));
+		ClosestObstacle = overlapActor;
 }
 

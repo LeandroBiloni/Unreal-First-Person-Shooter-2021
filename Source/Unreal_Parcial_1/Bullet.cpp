@@ -16,7 +16,8 @@ void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	MyPlayer = GetWorld()->GetFirstPlayerComponent()->GetPawn();
+	MyPlayer = CastChecked<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 }
 
 // Called every frame
@@ -26,7 +27,7 @@ void ABullet::Tick(float DeltaTime)
 
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * DeltaTime);
 
-	if (MyTrigger->IsOverlappingActor(MyPlayer))
+	if (MyTrigger->)
 	{
 		MyPlayer->GetDamage(Damage);
 	}
