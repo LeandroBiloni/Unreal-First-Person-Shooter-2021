@@ -63,6 +63,7 @@ void ATurretEnemy::LookTarget()
 
 void ATurretEnemy::Shoot()
 {
+	UE_LOG(LogTemp, Warning, TEXT("torreta dispara"));
 	AActor* actor = this;
 	UWorld* world = GetWorld();
 
@@ -93,7 +94,7 @@ bool ATurretEnemy::InSight(FVector playerPos)
 	FCollisionQueryParams params = FCollisionQueryParams(TEXT(""), false, GetOwner());
 
 	FVector offset = FVector(0.0f, 200.0f, 0.0f);
-	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetForwardVector() * attackRange, ECollisionChannel::ECC_PhysicsBody, params);
+	GetWorld()->LineTraceSingleByChannel(hit, spawn->GetComponentLocation(), spawn->GetComponentLocation() + spawn->GetForwardVector() * attackRange, ECollisionChannel::ECC_PhysicsBody, params);
 
 	DrawDebugLine(GetWorld(), spawn->GetComponentLocation(), spawn->GetComponentLocation() + spawn->GetForwardVector() * attackRange, FColor::Red, false, -1.0f, 0.0f, 10.0f);
 	if (hit.GetActor() != player) 

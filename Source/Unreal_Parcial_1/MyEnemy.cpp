@@ -50,7 +50,7 @@ void AMyEnemy::Tick(float DeltaTime)
 	}
 }
 
-void AMyEnemy::GetDamage(int damage)
+void AMyEnemy::TakeDamage(int damage)
 {
 	CurrentLife -= damage;
 }

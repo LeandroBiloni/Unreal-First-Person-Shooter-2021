@@ -15,7 +15,6 @@ AMySceneManager::AMySceneManager()
 void AMySceneManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -35,6 +34,7 @@ void AMySceneManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AMySceneManager::Restart()
 {
+	UE_LOG(LogTemp, Warning, TEXT("restart"));
 	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
 }
 

@@ -32,9 +32,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
 	void Restart();
+	UFUNCTION(BlueprintCallable)
 	void LoadNextLevel();
+	UFUNCTION(BlueprintCallable)
 	void Win();
+	UFUNCTION(BlueprintCallable)
 	void Lose();
 
 };

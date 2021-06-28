@@ -16,10 +16,16 @@ ABullet::ABullet()
 void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	MyPlayer = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
+	Player = GetWorld()->GetFirstPlayerController()->GetPawn();
 
+	Owner = GetOwner();
+
+	if (Player == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("player null"));
+	}
+	else UE_LOG(LogTemp, Warning, TEXT("player no es null"));
 }
 
 // Called every frame
@@ -33,8 +39,17 @@ void ABullet::Tick(float DeltaTime)
 void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
-		MyPlayer->GetDamage(Damage);
-	/*if (OtherActor != this && OtherActor == MyPlayer) 
-	{
-	}*/
+	//if (OtherActor != this && OtherActor == Player)
+	//{
+	//	
+	//}
+	//UE_LOG(LogTemp, Warning, TEXT("choque"));
+	//Destroy();
+	
+}
+
+void ABullet::DamageCharacter()
+{
+	UE_LOG(LogTemp, Warning, TEXT("daño al player"));
+	MyPlayer->GetDamage(Damage);
 }

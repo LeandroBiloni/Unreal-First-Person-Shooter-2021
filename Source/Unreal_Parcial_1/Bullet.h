@@ -18,19 +18,23 @@ public:
 	ABullet();
 	UPROPERTY(EditAnywhere)
 		float Speed;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float Damage;
 	AMyCharacter* MyPlayer;
-	UPROPERTY(EditAnywhere)
-		ATriggerVolume* MyTrigger;
+
+	AActor* Player;
+
+	AActor* Owner;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& SweepResult);
+
+		UFUNCTION(BlueprintCallable)
+			void DamageCharacter();
 
 public:	
 	// Called every frame

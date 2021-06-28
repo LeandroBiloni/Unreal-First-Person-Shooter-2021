@@ -3,6 +3,7 @@
 
 #include "MyCharacter.h"
 #include "Bullet.h"
+#include "MySceneManager.h"
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
@@ -27,6 +28,8 @@ void AMyCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("BulletPrefab is a NULL POINTER"));
 	}
+
+	currentLife = maxLife;
 }
 
 // Called every frame

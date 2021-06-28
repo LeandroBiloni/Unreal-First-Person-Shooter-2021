@@ -16,7 +16,7 @@ public:
 	AMyCharacter();
 	UPROPERTY(EditAnywhere)
 	int maxLife;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int currentLife;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -48,7 +48,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void ChangeLevel(const FName& LvlToChange);
 
-	void RestartThisLevel();
+		void RestartThisLevel();
 
 	void GetDamage(int damage);
 };

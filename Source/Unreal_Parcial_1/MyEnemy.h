@@ -53,7 +53,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void GetDamage(int damage);
+	UFUNCTION(BlueprintCallable)
+	void TakeDamage(int damage);
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);
