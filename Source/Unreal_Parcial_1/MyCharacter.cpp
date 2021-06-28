@@ -51,7 +51,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMyCharacter::Shoot);
-	PlayerInputComponent->BindAction("RestartButton", IE_Pressed, this, &AMyCharacter::RestartThisLevel);
 }
 
 void AMyCharacter::MoveForward(float f)
@@ -116,10 +115,5 @@ void AMyCharacter::Shoot()
 void AMyCharacter::GetDamage(int damage)
 {
 	currentLife -= damage;
-}
-
-void AMyCharacter::RestartThisLevel() 
-{
-	ChangeLevel(LevelA);
 }
 

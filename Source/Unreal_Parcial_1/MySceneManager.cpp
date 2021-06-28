@@ -24,17 +24,9 @@ void AMySceneManager::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-//void AMySceneManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-//{
-//	Super::SetupPlayerInputComponent(PlayerInputComponent);
-//
-//	//PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AMySceneManager::Restart);
-//}
 
-void AMySceneManager::Restart()
+void AMySceneManager::LoadFirstLevel() 
 {
-	UE_LOG(LogTemp, Warning, TEXT("restart"));
 	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
 }
 

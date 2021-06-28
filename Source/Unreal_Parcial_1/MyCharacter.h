@@ -45,10 +45,5 @@ public:
 	void MouseY(float f);
 	void Shoot();
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void ChangeLevel(const FName& LvlToChange);
-
-		void RestartThisLevel();
-
 	void GetDamage(int damage);
 };
