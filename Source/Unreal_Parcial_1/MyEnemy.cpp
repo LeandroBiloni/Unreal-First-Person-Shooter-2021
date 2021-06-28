@@ -9,6 +9,9 @@ AMyEnemy::AMyEnemy()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+	Sphere->InitSphereRadius(250.0f);
+	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
