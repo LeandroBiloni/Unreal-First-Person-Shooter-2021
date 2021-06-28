@@ -115,7 +115,6 @@ void AMyCharacter::Shoot()
 
 void AMyCharacter::GetDamage(int damage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("recibi dano"));
 	currentLife -= damage;
 }
 
