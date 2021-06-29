@@ -33,7 +33,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void LoadFirstLevel();
 	UFUNCTION(BlueprintCallable)
-	void LoadNextLevel();
+	void LoadSecondLevel();
+
+	UFUNCTION(BlueprintCallable)
+		void LoadThirdLevel();
+
+
 	UFUNCTION(BlueprintCallable)
 	void Win();
 	UFUNCTION(BlueprintCallable)

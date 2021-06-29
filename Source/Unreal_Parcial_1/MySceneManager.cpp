@@ -30,9 +30,14 @@ void AMySceneManager::LoadFirstLevel()
 	UGameplayStatics::OpenLevel(GetWorld(), "Lvl1");
 }
 
-void AMySceneManager::LoadNextLevel()
+void AMySceneManager::LoadSecondLevel()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "Lvl2");
+}
+
+void AMySceneManager::LoadThirdLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lvl3");
 }
 
 void AMySceneManager::Win()
