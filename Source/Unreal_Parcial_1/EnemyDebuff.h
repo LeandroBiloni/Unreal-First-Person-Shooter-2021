@@ -5,10 +5,10 @@
 #include "Engine.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
-#include "MyEnemy.generated.h"
+#include "EnemyDebuff.generated.h"
 
 UENUM()
-enum class EBehavioursEnemy : uint8
+enum class EEnemyBehaviours : uint8
 {
 	BE_Follow UMETA(DisplayName = "Follow"),
 	BE_LookPlayer UMETA(DisplayName = "Look"),
@@ -17,20 +17,20 @@ enum class EBehavioursEnemy : uint8
 };
 
 UCLASS()
-class UNREAL_PARCIAL_1_API AMyEnemy : public AActor
+class UNREAL_PARCIAL_1_API AEnemyDebuff : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMyEnemy();
+	AEnemyDebuff();
 
 	USphereComponent* Sphere;
 	TArray<AActor*> Overlap;
 	AActor* Player;
-	
+
 	UPROPERTY(EditAnywhere, Category = Enum)
-	EBehavioursEnemy myEnum;
+		EEnemyBehaviours myEnum;
 
 
 	UPROPERTY(EditAnywhere)
@@ -41,7 +41,6 @@ public:
 		float AvoidWeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AActor* ClosestObstacle;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -55,7 +54,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(int damage);
+		void TakeDamage(int damage);
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);

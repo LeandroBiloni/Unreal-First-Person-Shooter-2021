@@ -1,28 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyEnemy.h"
+#include "EnemyDebuff.h"
 
 // Sets default values
-AMyEnemy::AMyEnemy()
+AEnemyDebuff::AEnemyDebuff()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere->InitSphereRadius(250.0f);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
-void AMyEnemy::BeginPlay()
+void AEnemyDebuff::BeginPlay()
 {
 	Super::BeginPlay();
 	Player = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 // Called every frame
-void AMyEnemy::Tick(float DeltaTime)
+void AEnemyDebuff::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (!Player) return;
@@ -38,37 +37,37 @@ void AMyEnemy::Tick(float DeltaTime)
 
 	switch (myEnum)
 	{
-	case EBehavioursEnemy::BE_LookPlayer:
+	case EEnemyBehaviours::BE_LookPlayer:
 		LookTarget();
 		break;
-	case EBehavioursEnemy::BE_Follow:
+	case EEnemyBehaviours::BE_Follow:
 		FollowTarget(DeltaTime);
 		break;
-	case EBehavioursEnemy::BE_Avoidance:
+	case EEnemyBehaviours::BE_Avoidance:
 		Avoidance(DeltaTime);
 		break;
 	}
 }
 
-void AMyEnemy::TakeDamage(int damage)
+void AEnemyDebuff::TakeDamage(int damage)
 {
 	CurrentLife -= damage;
 }
 
-void AMyEnemy::LookTarget()
+void AEnemyDebuff::LookTarget()
 {
 	FVector dir = Player->GetActorLocation() - GetActorLocation();
 	dir.Z = 0;
 	SetActorRotation(dir.Rotation());
 }
 
-void AMyEnemy::FollowTarget(float deltaTime)
+void AEnemyDebuff::FollowTarget(float deltaTime)
 {
 	LookTarget();
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
-void AMyEnemy::Avoidance(float deltaTime)
+void AEnemyDebuff::Avoidance(float deltaTime)
 {
 	FVector dir = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 
@@ -82,15 +81,15 @@ void AMyEnemy::Avoidance(float deltaTime)
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
-void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
+void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
 {
-	if (overlapActor == this )
+	if (overlapActor == this)
 		return;
+
 	if (overlapActor == Player)
 	{
-		myEnum = EBehavioursEnemy::BE_Follow;
+		myEnum = EEnemyBehaviours::BE_Follow;
 	}
-
 
 	if (ClosestObstacle)
 	{
@@ -100,14 +99,13 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 		if (distB.Size() < distA.Size())
 		{
 			ClosestObstacle = overlapActor;
-			myEnum = EBehavioursEnemy::BE_Avoidance;
-
+			myEnum = EEnemyBehaviours::BE_Avoidance;
 		}
 	}
 	else
 	{
 		ClosestObstacle = overlapActor;
-		myEnum = EBehavioursEnemy::BE_LookPlayer;
+		myEnum = EEnemyBehaviours::BE_LookPlayer;
 	}
 }
 
