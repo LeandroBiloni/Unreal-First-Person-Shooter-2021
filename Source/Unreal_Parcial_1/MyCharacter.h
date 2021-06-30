@@ -46,4 +46,7 @@ public:
 	void Shoot();
 
 	void GetDamage(int damage);
+
+	UFUNCTION(BlueprintCallable)
+		void AddLife(int value);
 };

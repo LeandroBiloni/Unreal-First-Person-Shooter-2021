@@ -117,3 +117,8 @@ void AMyCharacter::GetDamage(int damage)
 	currentLife -= damage;
 }
 
+void AMyCharacter::AddLife(int value)
+{
+	currentLife += value;
+}
+
