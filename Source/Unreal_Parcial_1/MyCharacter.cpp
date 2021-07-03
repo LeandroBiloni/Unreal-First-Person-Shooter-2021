@@ -30,8 +30,9 @@ void AMyCharacter::BeginPlay()
 	}
 
 	currentLife = maxLife;
-
-	MyMesh = FindComponentByClass<UStaticMeshComponent>();
+	TakeDamage = false;
+	TakeDamageCounter = 0;
+	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
 }
 
 // Called every frame
@@ -46,12 +47,12 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		TakeDamageCounter += DeltaTime;
 
-		if (TakeDamageCounter >= 1.5f)
+		if (TakeDamageCounter >= DamageMaterialTime)
 		{
 			TakeDamage = false;
 			TakeDamageCounter = 0;
 			CopyMaterial = UMaterialInstanceDynamic::Create(OriginalMaterial, this);
-			MyMesh->SetMaterial(0, CopyMaterial);
+			MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 		}
 	}
 }
@@ -138,7 +139,7 @@ void AMyCharacter::GetDamage(int damage)
 {
 	currentLife -= damage;
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
-	MyMesh->SetMaterial(0, CopyMaterial);
+	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 	TakeDamage = true;
 }
 

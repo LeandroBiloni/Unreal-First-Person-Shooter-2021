@@ -44,6 +44,26 @@ public:
 		AActor* ClosestObstacle;
 	UPROPERTY(EditAnywhere)
 		float AttackRange = 50.0f;
+
+	UPROPERTY(EditAnywhere)
+		int MaterialPosToReplace;
+
+	USkeletalMeshComponent* MyMesh;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* OriginalMaterial;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* DamageMaterial;
+
+	UMaterialInstanceDynamic* CopyMaterial;
+
+	bool DamageOn;
+
+	float DamageOnCounter;
+
+	UPROPERTY(EditAnywhere)
+		float DamageMaterialTime;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

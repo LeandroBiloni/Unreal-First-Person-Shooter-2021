@@ -20,6 +20,10 @@ void AMyEnemy::BeginPlay()
 	Super::BeginPlay();
 	//Player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	DamageOn = false;
+	DamageOnCounter = 0;
+	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
 }
 
 // Called every frame
@@ -52,11 +56,27 @@ void AMyEnemy::Tick(float DeltaTime)
 		Attack();
 		break;
 	}
+
+	if (DamageOn)
+	{
+		DamageOnCounter += DeltaTime;
+
+		if (DamageOnCounter >= DamageMaterialTime)
+		{
+			DamageOn = false;
+			DamageOnCounter = 0;
+			CopyMaterial = UMaterialInstanceDynamic::Create(OriginalMaterial, this);
+			MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
+		}
+	}
 }
 
 void AMyEnemy::TakeDamage(int damage)
 {
 	CurrentLife -= damage;
+	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
+	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
+	DamageOn = true;
 }
 
 void AMyEnemy::LookTarget()

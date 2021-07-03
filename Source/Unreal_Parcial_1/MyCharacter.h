@@ -29,7 +29,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class ABullet> bulletPrefab;
 
-	UStaticMeshComponent* MyMesh;
+	UPROPERTY(EditAnywhere)
+		int MaterialPosToReplace;
+	
+	USkeletalMeshComponent* MyMesh;
 
 	UPROPERTY(EditAnywhere)
 		UMaterialInterface* OriginalMaterial;
@@ -42,6 +45,9 @@ public:
 	bool TakeDamage;
 
 	float TakeDamageCounter;
+
+	UPROPERTY(EditAnywhere)
+		float DamageMaterialTime;
 
 protected:
 	// Called when the game starts or when spawned
