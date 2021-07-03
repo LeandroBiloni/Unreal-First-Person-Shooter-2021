@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
+#include "MyCharacter.h"
 #include "MyEnemy.generated.h"
 
 UENUM()
@@ -27,12 +28,12 @@ public:
 
 	USphereComponent* Sphere;
 	TArray<AActor*> Overlap;
-	AActor* Player;
+	AMyCharacter* Player;
 	
 	UPROPERTY(EditAnywhere, Category = Enum)
 	EBehavioursEnemy myEnum;
 
-
+	
 	UPROPERTY(EditAnywhere)
 		float Speed;
 	UPROPERTY(EditAnywhere)
@@ -41,6 +42,10 @@ public:
 		float AvoidWeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AActor* ClosestObstacle;
+	UPROPERTY(EditAnywhere)
+		float AttackRange = 50.0f;
+	UPROPERTY(EditAnywhere)
+		int myDamage;
 
 protected:
 	// Called when the game starts or when spawned
@@ -49,6 +54,8 @@ protected:
 		int MaxLife;
 	UPROPERTY(EditAnywhere)
 		int CurrentLife;
+
+	bool canAttack;
 
 public:	
 	// Called every frame

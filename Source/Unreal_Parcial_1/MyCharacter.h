@@ -18,7 +18,12 @@ public:
 	int maxLife;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int currentLife;
+	
+	//Este cambio
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float shootTimer;
 
+	bool canShoot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 	UPROPERTY(EditAnywhere)
@@ -30,6 +35,10 @@ protected:
 	FName LevelA;
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
 	FName LevelB;
+	
+	//Este cambio
+	float currentTime;
+
 	virtual void BeginPlay() override;
 
 public:

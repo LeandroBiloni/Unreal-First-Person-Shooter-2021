@@ -36,7 +36,9 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	currentTime += DeltaTime;
+	if (currentTime >= shootTimer)
+		canShoot = true;
 }
 
 // Called to bind functionality to input
@@ -87,6 +89,8 @@ void AMyCharacter::MouseY(float f)
 
 void AMyCharacter::Shoot()
 {
+	//Esto
+	if (!canShoot) return;
 	UE_LOG(LogTemp, Warning,TEXT("Shoot check"));
 
 	FVector CameraLocation;
@@ -109,6 +113,9 @@ void AMyCharacter::Shoot()
 
 		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
 	}
+	//Esto
+	currentTime = 0;
+	canShoot = false;
 }
 
 

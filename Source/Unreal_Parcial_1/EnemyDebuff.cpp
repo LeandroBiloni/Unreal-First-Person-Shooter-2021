@@ -17,7 +17,8 @@ AEnemyDebuff::AEnemyDebuff()
 void AEnemyDebuff::BeginPlay()
 {
 	Super::BeginPlay();
-	Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	//Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 // Called every frame
@@ -45,6 +46,9 @@ void AEnemyDebuff::Tick(float DeltaTime)
 		break;
 	case EEnemyBehaviours::BE_Avoidance:
 		Avoidance(DeltaTime);
+		break;
+	case EEnemyBehaviours::BE_Attack:
+		Attack();
 		break;
 	}
 }
@@ -81,6 +85,12 @@ void AEnemyDebuff::Avoidance(float deltaTime)
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
+void AEnemyDebuff::Attack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack"));
+
+}
+
 void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
 {
 	if (overlapActor == this)
@@ -88,6 +98,12 @@ void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
 
 	if (overlapActor == Player)
 	{
+		FVector distToPlayer = overlapActor->GetActorLocation() - GetActorLocation();
+		if (distToPlayer.Size() < AttackRange)
+		{
+			myEnum = EEnemyBehaviours::BE_Attack;
+			return;
+		}
 		myEnum = EEnemyBehaviours::BE_Follow;
 	}
 

@@ -18,7 +18,8 @@ AMyEnemy::AMyEnemy()
 void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	//Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 // Called every frame
@@ -46,6 +47,9 @@ void AMyEnemy::Tick(float DeltaTime)
 		break;
 	case EBehavioursEnemy::BE_Avoidance:
 		Avoidance(DeltaTime);
+		break;
+	case EBehavioursEnemy::BE_Attack:
+		Attack();
 		break;
 	}
 }
@@ -82,12 +86,28 @@ void AMyEnemy::Avoidance(float deltaTime)
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 }
 
+void AMyEnemy::Attack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack"));
+	if(canAttack)
+		Player->GetDamage(myDamage);
+
+	canAttack = false;
+}
+
 void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 {
 	if (overlapActor == this )
 		return;
 	if (overlapActor == Player)
 	{
+		FVector distB = overlapActor->GetActorLocation() - GetActorLocation();
+		if (distB.Size() < AttackRange)
+		{
+			canAttack = true;
+			myEnum = EBehavioursEnemy::BE_Attack;
+			return;
+		}
 		myEnum = EBehavioursEnemy::BE_Follow;
 	}
 
