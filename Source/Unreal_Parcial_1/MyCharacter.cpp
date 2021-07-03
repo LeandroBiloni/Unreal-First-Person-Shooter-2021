@@ -30,6 +30,8 @@ void AMyCharacter::BeginPlay()
 	}
 
 	currentLife = maxLife;
+
+	MyMesh = FindComponentByClass<UStaticMeshComponent>();
 }
 
 // Called every frame
@@ -39,6 +41,19 @@ void AMyCharacter::Tick(float DeltaTime)
 	currentTime += DeltaTime;
 	if (currentTime >= shootTimer)
 		canShoot = true;
+
+	if (TakeDamage)
+	{
+		TakeDamageCounter += DeltaTime;
+
+		if (TakeDamageCounter >= 1.5f)
+		{
+			TakeDamage = false;
+			TakeDamageCounter = 0;
+			CopyMaterial = UMaterialInstanceDynamic::Create(OriginalMaterial, this);
+			MyMesh->SetMaterial(0, CopyMaterial);
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -122,6 +137,9 @@ void AMyCharacter::Shoot()
 void AMyCharacter::GetDamage(int damage)
 {
 	currentLife -= damage;
+	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
+	MyMesh->SetMaterial(0, CopyMaterial);
+	TakeDamage = true;
 }
 
 void AMyCharacter::AddLife(int value)

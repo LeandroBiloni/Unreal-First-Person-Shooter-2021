@@ -29,6 +29,20 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class ABullet> bulletPrefab;
 
+	UStaticMeshComponent* MyMesh;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* OriginalMaterial;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* DamageMaterial;
+
+	UMaterialInstanceDynamic* CopyMaterial;
+
+	bool TakeDamage;
+
+	float TakeDamageCounter;
+
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
