@@ -12,6 +12,9 @@ AMyEnemy::AMyEnemy()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere->InitSphereRadius(250.0f);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
+	//Sound
+	myAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 }
 
 // Called when the game starts or when spawned
@@ -77,6 +80,9 @@ void AMyEnemy::TakeDamage(int damage)
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
 	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 	DamageOn = true;
+
+	//Sound
+	PlaySound(hurtSound);
 }
 
 void AMyEnemy::LookTarget()
@@ -112,6 +118,8 @@ void AMyEnemy::Attack()
 	if(canAttack)
 		Player->GetDamage(myDamage);
 
+	//Sound
+	PlaySound(attackSound);
 	canAttack = false;
 }
 
@@ -151,3 +159,10 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 	}
 }
 
+//Sound
+void AMyEnemy::PlaySound(USoundWave* sound)
+{
+	myAudio->Stop();
+	myAudio->Sound = sound;
+	myAudio->Play();
+}

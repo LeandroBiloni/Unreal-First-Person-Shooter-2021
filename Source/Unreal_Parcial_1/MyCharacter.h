@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
@@ -49,6 +50,18 @@ public:
 	UPROPERTY(EditAnywhere)
 		float DamageMaterialTime;
 
+	//Sounds
+	UPROPERTY(EditAnywhere)
+		USoundWave* shootSound;
+	UPROPERTY(EditAnywhere)
+		USoundWave* hurtSound;
+	UPROPERTY(EditAnywhere)
+		USoundWave* dieSound;
+	UPROPERTY(EditAnywhere)
+		USoundWave* walkSound;
+
+	UAudioComponent* MyAudio;
+
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
@@ -78,4 +91,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void AddLife(int value);
+
+	//Sound
+	void PlaySound(USoundWave* sound);
 };

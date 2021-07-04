@@ -9,7 +9,9 @@ AMyCharacter::AMyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	//Sound
+	MyAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 }
 
 // Called when the game starts or when spawned
@@ -33,6 +35,9 @@ void AMyCharacter::BeginPlay()
 	TakeDamage = false;
 	TakeDamageCounter = 0;
 	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	//Sound
+	//MyAudio = FindComponentByClass<UAudioComponent>();
 }
 
 // Called every frame
@@ -132,6 +137,9 @@ void AMyCharacter::Shoot()
 	//Esto
 	currentTime = 0;
 	canShoot = false;
+
+	//Sound
+	PlaySound(shootSound);
 }
 
 
@@ -141,6 +149,8 @@ void AMyCharacter::GetDamage(int damage)
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
 	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 	TakeDamage = true;
+	//Sound
+	PlaySound(hurtSound);
 }
 
 void AMyCharacter::AddLife(int value)
@@ -148,3 +158,9 @@ void AMyCharacter::AddLife(int value)
 	currentLife += value;
 }
 
+void AMyCharacter::PlaySound(USoundWave* sound)
+{
+	MyAudio->Stop();
+	MyAudio->Sound = sound;
+	MyAudio->Play();
+}

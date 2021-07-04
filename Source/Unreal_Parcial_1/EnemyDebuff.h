@@ -64,6 +64,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float DamageMaterialTime;
+
+	//Sound
+	UPROPERTY(EditAnywhere)
+		USoundWave* attackSound;
+	UPROPERTY(EditAnywhere)
+		USoundWave* hurtSound;
+	UPROPERTY(EditAnywhere)
+		USoundWave* dieSound;
+	UAudioComponent* myAudio;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -84,4 +93,7 @@ public:
 	void Attack();
 	UFUNCTION(BlueprintCallable)
 		void MyBeginOverlap(AActor* actorOverlap);
+
+	//Sound
+	void PlaySound(USoundWave* sound);
 };

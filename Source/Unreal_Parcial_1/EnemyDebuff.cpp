@@ -11,6 +11,9 @@ AEnemyDebuff::AEnemyDebuff()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere->InitSphereRadius(250.0f);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
+	//Sound
+	myAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 }
 
 // Called when the game starts or when spawned
@@ -76,6 +79,9 @@ void AEnemyDebuff::TakeDamage(int damage)
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
 	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 	DamageOn = true;
+
+	//Sound
+	PlaySound(hurtSound);
 }
 
 void AEnemyDebuff::LookTarget()
@@ -108,7 +114,9 @@ void AEnemyDebuff::Avoidance(float deltaTime)
 void AEnemyDebuff::Attack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack"));
-
+	//Logica de debuff
+	//Sound
+	PlaySound(attackSound);
 }
 
 void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
@@ -145,3 +153,10 @@ void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
 	}
 }
 
+//Sound
+void AEnemyDebuff::PlaySound(USoundWave* sound)
+{
+	myAudio->Stop();
+	myAudio->Sound = sound;
+	myAudio->Play();
+}
