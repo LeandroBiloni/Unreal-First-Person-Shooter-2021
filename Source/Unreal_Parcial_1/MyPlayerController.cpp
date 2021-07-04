@@ -7,8 +7,11 @@ void AMyPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (PrefabCanvas) 
+	UWorld* World = GetWorld();
+	FString Name = World->GetName();
+	if (PrefabCanvas && Name != "Menu" && Name != "Win" && Name != "Lose")
 	{
+		
 		CurrentUI = CreateWidget<UMyUserWidget>(this, PrefabCanvas);
 
 		if (CurrentUI)
