@@ -24,6 +24,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float shootTimer;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	//Este cambio
+	float currentTime;
+
 	bool canShoot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
@@ -70,8 +74,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
 	FName LevelB;
 	
-	//Este cambio
-	float currentTime;
+	
 
 	virtual void BeginPlay() override;
 

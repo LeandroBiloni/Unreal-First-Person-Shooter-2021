@@ -30,7 +30,7 @@ void AMyCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("BulletPrefab is a NULL POINTER"));
 	}
-
+	currentTime = shootTimer;
 	currentLife = maxLife;
 	TakeDamage = false;
 	TakeDamageCounter = 0;
@@ -44,7 +44,8 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	currentTime += DeltaTime;
+	if (!canShoot)
+		currentTime += DeltaTime;
 	if (currentTime >= shootTimer)
 		canShoot = true;
 
@@ -135,6 +136,7 @@ void AMyCharacter::Shoot()
 		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
 	}
 	//Esto
+	UE_LOG(LogTemp, Warning, TEXT("current time a 0"));
 	currentTime = 0;
 	canShoot = false;
 
