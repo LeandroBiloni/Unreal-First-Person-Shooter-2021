@@ -15,10 +15,10 @@ class UNREAL_PARCIAL_1_API AMyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();
-	UPROPERTY(EditAnywhere)
-	int maxLife;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	int currentLife;
+	float maxLife;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float currentLife;
 	
 	//Este cambio
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -43,6 +43,7 @@ public:
 
 	UMaterialInstanceDynamic* CopyMaterial;
 
+	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
 	bool TakeDamage;
 
 	float TakeDamageCounter;
@@ -87,10 +88,10 @@ public:
 	void MouseY(float f);
 	void Shoot();
 
-	void GetDamage(int damage);
+	void GetDamage(float damage);
 
 	UFUNCTION(BlueprintCallable)
-		void AddLife(int value);
+		void AddLife(float value);
 
 	//Sound
 	void PlaySound(USoundWave* sound);

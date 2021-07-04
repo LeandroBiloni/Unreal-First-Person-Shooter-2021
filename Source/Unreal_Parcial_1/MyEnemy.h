@@ -45,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		float AttackRange = 50.0f;
 	UPROPERTY(EditAnywhere)
-		int myDamage;
+		float myDamage;
 
 	UPROPERTY(EditAnywhere)
 		int MaterialPosToReplace;
@@ -91,7 +91,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(int damage);
+	void TakeDamage(float damage);
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);

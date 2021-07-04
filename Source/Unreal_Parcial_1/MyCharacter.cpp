@@ -143,7 +143,7 @@ void AMyCharacter::Shoot()
 }
 
 
-void AMyCharacter::GetDamage(int damage)
+void AMyCharacter::GetDamage(float damage)
 {
 	currentLife -= damage;
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
@@ -153,9 +153,11 @@ void AMyCharacter::GetDamage(int damage)
 	PlaySound(hurtSound);
 }
 
-void AMyCharacter::AddLife(int value)
+void AMyCharacter::AddLife(float value)
 {
 	currentLife += value;
+	if (currentLife > maxLife)
+		currentLife = maxLife;
 }
 
 void AMyCharacter::PlaySound(USoundWave* sound)

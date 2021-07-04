@@ -86,7 +86,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-		void TakeDamage(int damage);
+		void TakeDamage(float damage);
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);

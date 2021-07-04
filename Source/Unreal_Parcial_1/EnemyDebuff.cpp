@@ -73,7 +73,7 @@ void AEnemyDebuff::Tick(float DeltaTime)
 	}
 }
 
-void AEnemyDebuff::TakeDamage(int damage)
+void AEnemyDebuff::TakeDamage(float damage)
 {
 	CurrentLife -= damage;
 	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
