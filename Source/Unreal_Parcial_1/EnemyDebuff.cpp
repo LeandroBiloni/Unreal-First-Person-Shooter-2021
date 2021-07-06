@@ -127,6 +127,11 @@ void AEnemyDebuff::LookTarget()
 	//Animation
 	if (anim)
 		anim->isMoving = false;
+
+	if (dir.Size() <= range)
+	{
+		myEnum = EEnemyBehaviours::BE_Follow;
+	}
 }
 
 void AEnemyDebuff::FollowTarget(float deltaTime)
@@ -134,16 +139,21 @@ void AEnemyDebuff::FollowTarget(float deltaTime)
 	LookTarget();
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 
-	FVector distToPlayer = Player->GetActorLocation() - GetActorLocation();
-	if (distToPlayer.Size() > range)
-	{
-		myEnum = EEnemyBehaviours::BE_LookPlayer;
-		return;
-	}
 	//Animation
 	if (anim)
 	{
 		anim->isMoving = true;
+	}
+
+	FVector distToPlayer = Player->GetActorLocation() - GetActorLocation();
+	if (distToPlayer.Size() > range)
+	{
+		myEnum = EEnemyBehaviours::BE_LookPlayer;
+	}
+	
+	if (distToPlayer.Size() <= AttackRange)
+	{
+		myEnum = EEnemyBehaviours::BE_Attack;
 	}
 }
 
@@ -154,22 +164,20 @@ void AEnemyDebuff::Avoidance(float deltaTime)
 	if (ClosestObstacle)
 		dir += (GetActorLocation() - ClosestObstacle->GetActorLocation()).GetSafeNormal() * AvoidWeight;
 
+	//Animation
+	if (anim)
+	{
+		anim->isMoving = true;
+	}
+
+	dir.Z = 0;
+	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
 
 	if (distToPlayer.Size() > range)
 	{
 		myEnum = EEnemyBehaviours::BE_LookPlayer;
 		return;
 	}
-
-	//Animation
-	if (anim)
-	{
-		anim->isMoving = true;
-	}
-	
-
-	dir.Z = 0;
-	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
 
 	SetActorRotation(rot.Rotation());
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
@@ -199,13 +207,7 @@ void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)
 
 	if (overlapActor == Player)
 	{
-		FVector distToPlayer = overlapActor->GetActorLocation() - GetActorLocation();
-		if (distToPlayer.Size() < AttackRange)
-		{
-			myEnum = EEnemyBehaviours::BE_Attack;
-			return;
-		}
-		myEnum = EEnemyBehaviours::BE_Follow;
+		return;
 	}
 
 	if (ClosestObstacle)
