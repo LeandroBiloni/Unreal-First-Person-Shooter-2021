@@ -10,7 +10,7 @@ AMyEnemy::AMyEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	Sphere->InitSphereRadius(500.0f);
+	Sphere->InitSphereRadius(20.0f);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	//Sound
@@ -130,6 +130,12 @@ void AMyEnemy::LookTarget()
 	dir.Z = 0;
 	SetActorRotation(dir.Rotation());
 
+	FVector dist = Player->GetActorLocation() - GetActorLocation();
+	if (dist.Size() <= range)
+	{
+		myEnum = EBehavioursEnemy::BE_Follow;
+	}
+
 	//Animation
 	if (anim)
 	{
@@ -142,14 +148,22 @@ void AMyEnemy::FollowTarget(float deltaTime)
 	LookTarget();
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
 
+	//Animation
+	if (anim)
+		anim->isMoving = true;
+
 	FVector dist = Player->GetActorLocation() - GetActorLocation();
 	if (dist.Size() > range)
 	{
 		myEnum = EBehavioursEnemy::BE_LookPlayer;
 	}
-	//Animation
-	if (anim)
-		anim->isMoving = true;
+
+	if (dist.Size() <= AttackRange)
+	{
+		canAttack = true;
+		myEnum = EBehavioursEnemy::BE_Attack;
+	}
+	
 }
 
 void AMyEnemy::Avoidance(float deltaTime)
@@ -159,11 +173,6 @@ void AMyEnemy::Avoidance(float deltaTime)
 	if (ClosestObstacle)
 		dir += (GetActorLocation() - ClosestObstacle->GetActorLocation()).GetSafeNormal() * AvoidWeight;
 
-	if (dist.Size() > range)
-	{
-		myEnum = EBehavioursEnemy::BE_LookPlayer;
-	}
-
 	//Animation
 	if (anim)
 	{
@@ -172,6 +181,11 @@ void AMyEnemy::Avoidance(float deltaTime)
 
 	dir.Z = 0;
 	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
+
+	if (dist.Size() > range)
+	{
+		myEnum = EBehavioursEnemy::BE_LookPlayer;
+	}
 
 	SetActorRotation(rot.Rotation());
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
@@ -205,14 +219,7 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 		return;
 	if (overlapActor == Player)
 	{
-		FVector distB = overlapActor->GetActorLocation() - GetActorLocation();
-		if (distB.Size() <= AttackRange)
-		{
-			canAttack = true;
-			myEnum = EBehavioursEnemy::BE_Attack;
-			return;
-		}
-		myEnum = EBehavioursEnemy::BE_Follow;
+		return;
 	}
 
 
@@ -225,7 +232,6 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 		{
 			ClosestObstacle = overlapActor;
 			myEnum = EBehavioursEnemy::BE_Avoidance;
-
 		}
 	}
 	else

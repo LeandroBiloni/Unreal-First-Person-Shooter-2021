@@ -109,6 +109,7 @@ public:
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);
+	UFUNCTION(BlueprintCallable)
 	void Attack();
 	UFUNCTION(BlueprintCallable)
 		void MyBeginOverlap(AActor* actorOverlap);
