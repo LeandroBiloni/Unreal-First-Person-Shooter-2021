@@ -92,6 +92,8 @@ public:
 
 	//Animation
 	UEnemyAnimInstance* anim;
+
+	float DeadTime;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

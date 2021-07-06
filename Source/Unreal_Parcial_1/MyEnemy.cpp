@@ -41,7 +41,18 @@ void AMyEnemy::BeginPlay()
 void AMyEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (myEnum == EBehavioursEnemy::BE_Dead) return;
+	if (myEnum == EBehavioursEnemy::BE_Dead) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EMPIEZO TIMER %f"), DeadTime);
+		DeadTime += DeltaTime;
+		if (DeadTime >= 5) 
+		{
+			UE_LOG(LogTemp, Warning, TEXT("DESTROY"));
+			Destroy();
+		}
+		return;
+	}
+	
 	if (!Player) return;
 	if (!Sphere) return;
 

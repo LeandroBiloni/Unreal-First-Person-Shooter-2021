@@ -96,6 +96,7 @@ protected:
 		int MaxLife;
 	UPROPERTY(EditAnywhere)
 		int CurrentLife;
+	float DeadTime;
 
 	bool canAttack;
 

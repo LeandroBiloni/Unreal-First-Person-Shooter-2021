@@ -88,6 +88,7 @@ protected:
 		float MaxLife;
 	UPROPERTY(EditAnywhere)
 		float CurrentLife;
+	float DeadTime;
 
 public:
 	// Called every frame
