@@ -66,8 +66,6 @@ public:
 		USoundWave* hurtSound;
 	UPROPERTY(EditAnywhere)
 		USoundWave* dieSound;
-	UPROPERTY(EditAnywhere)
-		USoundWave* walkSound;
 
 	UAudioComponent* MyAudio;
 
