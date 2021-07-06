@@ -6,7 +6,7 @@
 // Sets default values
 AEnemyDebuff::AEnemyDebuff()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere->InitSphereRadius(250.0f);
@@ -20,18 +20,25 @@ AEnemyDebuff::AEnemyDebuff()
 void AEnemyDebuff::BeginPlay()
 {
 	Super::BeginPlay();
-	//Player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	CurrentLife = MaxLife;
 
 	DamageOn = false;
 	DamageOnCounter = 0;
 	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	//Animation
+	if (MyMesh)
+		anim = Cast<UEnemyAnimInstance>(MyMesh->GetAnimInstance());
+
 }
 
 // Called every frame
 void AEnemyDebuff::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (myEnum == EEnemyBehaviours::BE_Dead) return;
 	if (!Player) return;
 	if (!Sphere) return;
 
@@ -56,6 +63,8 @@ void AEnemyDebuff::Tick(float DeltaTime)
 		break;
 	case EEnemyBehaviours::BE_Attack:
 		Attack();
+		break;
+	case EEnemyBehaviours::BE_Dead:
 		break;
 	}
 
@@ -82,6 +91,21 @@ void AEnemyDebuff::TakeDamage(float damage)
 
 	//Sound
 	PlaySound(hurtSound);
+
+	//Animation
+	if (anim)
+	{
+		anim->isHit = true;
+		if (CurrentLife <= 0)
+		{
+			anim->isDead = true;
+			Player->Debuff(false);
+			Sphere->SetSphereRadius(0.0f);
+			myEnum = EEnemyBehaviours::BE_Dead;
+		}
+	}
+	
+
 }
 
 void AEnemyDebuff::LookTarget()
@@ -89,20 +113,50 @@ void AEnemyDebuff::LookTarget()
 	FVector dir = Player->GetActorLocation() - GetActorLocation();
 	dir.Z = 0;
 	SetActorRotation(dir.Rotation());
+
+	//Animation
+	if (anim)
+		anim->isMoving = false;
 }
 
 void AEnemyDebuff::FollowTarget(float deltaTime)
 {
 	LookTarget();
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
+
+	FVector distToPlayer = Player->GetActorLocation() - GetActorLocation();
+	if (distToPlayer.Size() > range)
+	{
+		myEnum = EEnemyBehaviours::BE_LookPlayer;
+		return;
+	}
+	//Animation
+	if (anim)
+	{
+		anim->isMoving = true;
+	}
 }
 
 void AEnemyDebuff::Avoidance(float deltaTime)
 {
-	FVector dir = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-
+	FVector distToPlayer = Player->GetActorLocation() - GetActorLocation();
+	FVector dir = distToPlayer.GetSafeNormal();
 	if (ClosestObstacle)
 		dir += (GetActorLocation() - ClosestObstacle->GetActorLocation()).GetSafeNormal() * AvoidWeight;
+
+
+	if (distToPlayer.Size() > range)
+	{
+		myEnum = EEnemyBehaviours::BE_LookPlayer;
+		return;
+	}
+
+	//Animation
+	if (anim)
+	{
+		anim->isMoving = true;
+	}
+	
 
 	dir.Z = 0;
 	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
@@ -113,10 +167,19 @@ void AEnemyDebuff::Avoidance(float deltaTime)
 
 void AEnemyDebuff::Attack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack"));
+	//UE_LOG(LogTemp, Warning, TEXT("Attack"));
+
 	//Logica de debuff
+	Player->Debuff(true);
 	//Sound
 	PlaySound(attackSound);
+
+	//Animation
+	if (anim)
+	{
+		anim->isAttacking = true;
+	}
+
 }
 
 void AEnemyDebuff::MyBeginOverlap(AActor* overlapActor)

@@ -7,9 +7,9 @@
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	//Sound
 	MyAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 }
@@ -30,14 +30,17 @@ void AMyCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("BulletPrefab is a NULL POINTER"));
 	}
+	originalShootTimer = shootTimer;
 	currentTime = shootTimer;
 	currentLife = maxLife;
 	TakeDamage = false;
 	TakeDamageCounter = 0;
 	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
 
-	//Sound
-	//MyAudio = FindComponentByClass<UAudioComponent>();
+	//Animation
+	USkeletalMeshComponent* sk = FindComponentByClass< USkeletalMeshComponent>();
+	if (sk)
+		anim = Cast<UMyAnimInstance>(sk->GetAnimInstance());
 }
 
 // Called every frame
@@ -61,6 +64,9 @@ void AMyCharacter::Tick(float DeltaTime)
 			MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 		}
 	}
+
+	//Animacion
+	anim->SetDirection(myDir);
 }
 
 // Called to bind functionality to input
@@ -85,6 +91,8 @@ void AMyCharacter::MoveForward(float f)
 		FRotator myYaw(0, rot.Yaw, 0);
 		FVector dir = FRotationMatrix(myYaw).GetUnitAxis(EAxis::X);
 		AddMovementInput(dir, f);
+		//Animacion
+		myDir.Y = f;
 	}
 }
 
@@ -96,6 +104,8 @@ void AMyCharacter::MoveRight(float f)
 		FRotator myYaw(0, rot.Yaw, 0);
 		FVector dir = FRotationMatrix(myYaw).GetUnitAxis(EAxis::Y);
 		AddMovementInput(dir, f);
+		//Animacion
+		myDir.X = f;
 	}
 }
 
@@ -113,13 +123,11 @@ void AMyCharacter::Shoot()
 {
 	//Esto
 	if (!canShoot) return;
-	UE_LOG(LogTemp, Warning,TEXT("Shoot check"));
+	UE_LOG(LogTemp, Warning, TEXT("Shoot check"));
 
 	FVector CameraLocation;
 	FRotator CameraRotation;
 	GetActorEyesViewPoint(CameraLocation, CameraRotation);
-
-	MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
 
 	FVector MuzzleLoaction = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
 
@@ -142,6 +150,21 @@ void AMyCharacter::Shoot()
 
 	//Sound
 	PlaySound(shootSound);
+
+	//Animation
+	anim->isAttacking = true;
+}
+
+void AMyCharacter::Debuff(bool isDebuff)
+{
+	if (isDebuff)
+		shootTimer = debuffShootTimer;
+	else
+		shootTimer = originalShootTimer;
+
+	//UE_LOG(LogTemp, Warning, TEXT("ShootTimer = %s"), (isDebuff ? TEXT("Debuff True") : TEXT("Debuff False")));
+	//UE_LOG(LogTemp, Warning, TEXT("ShootTimer = %f"), shootTimer);
+
 }
 
 
@@ -153,6 +176,8 @@ void AMyCharacter::GetDamage(float damage)
 	TakeDamage = true;
 	//Sound
 	PlaySound(hurtSound);
+	//Animacion
+	anim->isHit = true;
 }
 
 void AMyCharacter::AddLife(float value)

@@ -10,7 +10,7 @@ AMyEnemy::AMyEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	Sphere->InitSphereRadius(250.0f);
+	Sphere->InitSphereRadius(500.0f);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	//Sound
@@ -21,18 +21,27 @@ AMyEnemy::AMyEnemy()
 void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	//Player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	DamageOn = false;
 	DamageOnCounter = 0;
 	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	CurrentLife = MaxLife;
+
+	//Animation
+	if (MyMesh)
+	{
+		anim = Cast<UEnemyAnimInstance>(MyMesh->GetAnimInstance());
+	}
+
 }
 
 // Called every frame
 void AMyEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (myEnum == EBehavioursEnemy::BE_Dead) return;
 	if (!Player) return;
 	if (!Sphere) return;
 
@@ -56,7 +65,10 @@ void AMyEnemy::Tick(float DeltaTime)
 		Avoidance(DeltaTime);
 		break;
 	case EBehavioursEnemy::BE_Attack:
-		Attack();
+		if (canAttack)
+			Attack();
+		break;
+	case EBehavioursEnemy::BE_Dead:
 		break;
 	}
 
@@ -72,6 +84,9 @@ void AMyEnemy::Tick(float DeltaTime)
 			MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
 		}
 	}
+
+	myCurrentTime += DeltaTime;
+
 }
 
 void AMyEnemy::TakeDamage(float damage)
@@ -83,6 +98,19 @@ void AMyEnemy::TakeDamage(float damage)
 
 	//Sound
 	PlaySound(hurtSound);
+
+	//Animation
+	if (anim)
+	{
+		anim->isHit = true;
+		if (CurrentLife <= 0)
+		{
+			anim->isDead = true;
+			Sphere->SetSphereRadius(0.0f);
+			myEnum = EBehavioursEnemy::BE_Dead;
+		}
+	}
+
 }
 
 void AMyEnemy::LookTarget()
@@ -90,20 +118,46 @@ void AMyEnemy::LookTarget()
 	FVector dir = Player->GetActorLocation() - GetActorLocation();
 	dir.Z = 0;
 	SetActorRotation(dir.Rotation());
+
+	//Animation
+	if (anim)
+	{
+		anim->isMoving = false;
+	}
 }
 
 void AMyEnemy::FollowTarget(float deltaTime)
 {
 	LookTarget();
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
+
+	FVector dist = Player->GetActorLocation() - GetActorLocation();
+	if (dist.Size() > range)
+	{
+		myEnum = EBehavioursEnemy::BE_LookPlayer;
+	}
+	//Animation
+	if (anim)
+		anim->isMoving = true;
 }
 
 void AMyEnemy::Avoidance(float deltaTime)
 {
-	FVector dir = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-
+	FVector dist = Player->GetActorLocation() - GetActorLocation();
+	FVector dir = dist.GetSafeNormal();
 	if (ClosestObstacle)
 		dir += (GetActorLocation() - ClosestObstacle->GetActorLocation()).GetSafeNormal() * AvoidWeight;
+
+	if (dist.Size() > range)
+	{
+		myEnum = EBehavioursEnemy::BE_LookPlayer;
+	}
+
+	//Animation
+	if (anim)
+	{
+		anim->isMoving = true;
+	}
 
 	dir.Z = 0;
 	FVector rot = FMath::Lerp(GetActorForwardVector(), dir, SpeedRot * deltaTime);
@@ -114,23 +168,34 @@ void AMyEnemy::Avoidance(float deltaTime)
 
 void AMyEnemy::Attack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack"));
-	if(canAttack)
-		Player->GetDamage(myDamage);
+	if (myCurrentTime < attackCooldown)
+	{
+		myEnum = EBehavioursEnemy::BE_LookPlayer;
+		UE_LOG(LogTemp, Warning, TEXT("No Attack"));
+		return;
+	}
 
+	Player->GetDamage(myDamage);
+	myCurrentTime = 0;
+	
 	//Sound
 	PlaySound(attackSound);
-	canAttack = false;
+
+	//Animation
+	if (anim)
+	{
+		anim->isAttacking = true;
+	}
 }
 
 void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 {
-	if (overlapActor == this )
+	if (overlapActor == this)
 		return;
 	if (overlapActor == Player)
 	{
 		FVector distB = overlapActor->GetActorLocation() - GetActorLocation();
-		if (distB.Size() < AttackRange)
+		if (distB.Size() <= AttackRange)
 		{
 			canAttack = true;
 			myEnum = EBehavioursEnemy::BE_Attack;
@@ -155,7 +220,7 @@ void AMyEnemy::MyBeginOverlap(AActor* overlapActor)
 	else
 	{
 		ClosestObstacle = overlapActor;
-		myEnum = EBehavioursEnemy::BE_LookPlayer;
+
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine.h"
+#include "MyAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
@@ -16,19 +17,22 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	float maxLife;
+		float maxLife;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float currentLife;
-	
+
 	//Este cambio
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float shootTimer;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	//Este cambio
-	float currentTime;
+		float debuffShootTimer = 3.0f;
+	float originalShootTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		//Este cambio
+		float currentTime;
 
 	bool canShoot;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 	UPROPERTY(EditAnywhere)
@@ -36,7 +40,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		int MaterialPosToReplace;
-	
+
 	USkeletalMeshComponent* MyMesh;
 
 	UPROPERTY(EditAnywhere)
@@ -48,7 +52,7 @@ public:
 	UMaterialInstanceDynamic* CopyMaterial;
 
 	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
-	bool TakeDamage;
+		bool TakeDamage;
 
 	float TakeDamageCounter;
 
@@ -67,14 +71,18 @@ public:
 
 	UAudioComponent* MyAudio;
 
+	//Animation
+	UMyAnimInstance* anim;
+	FVector2D myDir;
+
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
-	FName LevelA;
+		FName LevelA;
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
-	FName LevelB;
-	
-	
+		FName LevelB;
+
+
 
 	virtual void BeginPlay() override;
 
@@ -92,6 +100,7 @@ public:
 	void Shoot();
 
 	void GetDamage(float damage);
+	void Debuff(bool isDebuff);
 
 	UFUNCTION(BlueprintCallable)
 		void AddLife(float value);

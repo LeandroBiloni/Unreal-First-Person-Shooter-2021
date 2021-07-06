@@ -17,6 +17,9 @@ ATurretEnemy::ATurretEnemy()
 
 	spawn = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("spawn"));
 	spawn->SetupAttachment(cannon);
+
+	//Sound
+	myAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 }
 
 // Called when the game starts or when spawned
@@ -25,12 +28,26 @@ void ATurretEnemy::BeginPlay()
 	Super::BeginPlay();
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	canShoot = true;
+	currentLife = maxLife;
+
+	DamageOn = false;
+	DamageOnCounter = 0;
+	MyMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	//Animation
+	if (MyMesh)
+	{
+		anim = Cast<UEnemyAnimInstance>(MyMesh->GetAnimInstance());
+	}
 }
 
 // Called every frame
 void ATurretEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (isDead)
+		return;
 
 	if (canShoot == false) 
 	{
@@ -52,6 +69,19 @@ void ATurretEnemy::Tick(float DeltaTime)
 				canShoot = false;
 		}
 	}
+
+	if (DamageOn)
+	{
+		DamageOnCounter += DeltaTime;
+
+		if (DamageOnCounter >= DamageMaterialTime)
+		{
+			DamageOn = false;
+			DamageOnCounter = 0;
+			CopyMaterial = UMaterialInstanceDynamic::Create(OriginalMaterial, this);
+			MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
+		}
+	}
 }
 
 void ATurretEnemy::LookTarget()
@@ -70,6 +100,15 @@ void ATurretEnemy::Shoot()
 	if (world) 
 	{
 		world->SpawnActor<ABullet>(bulletPrefab, cannon->GetComponentLocation(), cannon->GetComponentRotation());
+	}
+
+	//Sound
+	PlaySound(attackSound);
+
+	//Animation
+	if (anim)
+	{
+		anim->isAttacking = true;
 	}
 }
 
@@ -104,3 +143,32 @@ bool ATurretEnemy::InSight(FVector playerPos)
 	return true;
 }
 
+void ATurretEnemy::TakeDamage(float damage)
+{
+	currentLife -= damage;
+	CopyMaterial = UMaterialInstanceDynamic::Create(DamageMaterial, this);
+	MyMesh->SetMaterial(MaterialPosToReplace, CopyMaterial);
+	DamageOn = true;
+
+	//Sound
+	PlaySound(hurtSound);
+
+	//Animation
+	if (anim)
+	{
+		anim->isHit = true;
+		if (currentLife <= 0)
+		{
+			anim->isDead = true;
+			isDead = true;
+		}
+	}
+}
+
+//Sound
+void  ATurretEnemy::PlaySound(USoundWave* sound)
+{
+	myAudio->Stop();
+	myAudio->Sound = sound;
+	myAudio->Play();
+}

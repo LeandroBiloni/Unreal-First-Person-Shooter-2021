@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "MyCharacter.h"
+#include "EnemyAnimInstance.h"
 #include "MyEnemy.generated.h"
 
 UENUM()
@@ -14,26 +15,27 @@ enum class EBehavioursEnemy : uint8
 	BE_Follow UMETA(DisplayName = "Follow"),
 	BE_LookPlayer UMETA(DisplayName = "Look"),
 	BE_Avoidance UMETA(DisplayName = "Avoid"),
-	BE_Attack UMETA(DisplayName = "Attack")
+	BE_Attack UMETA(DisplayName = "Attack"),
+	BE_Dead UMETA(DisplayName = "Dead")
 };
 
 UCLASS()
 class UNREAL_PARCIAL_1_API AMyEnemy : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AMyEnemy();
 
 	USphereComponent* Sphere;
 	TArray<AActor*> Overlap;
 	AMyCharacter* Player;
-	
-	UPROPERTY(EditAnywhere, Category = Enum)
-	EBehavioursEnemy myEnum;
 
-	
+	UPROPERTY(EditAnywhere, Category = Enum)
+		EBehavioursEnemy myEnum;
+
+
 	UPROPERTY(EditAnywhere)
 		float Speed;
 	UPROPERTY(EditAnywhere)
@@ -43,9 +45,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AActor* ClosestObstacle;
 	UPROPERTY(EditAnywhere)
+		float range = 250.0f;
+	UPROPERTY(EditAnywhere)
 		float AttackRange = 50.0f;
 	UPROPERTY(EditAnywhere)
 		float myDamage;
+	UPROPERTY(EditAnywhere)
+		float attackCooldown;
+
+	float myCurrentTime;
 
 	UPROPERTY(EditAnywhere)
 		int MaterialPosToReplace;
@@ -69,12 +77,17 @@ public:
 
 	//Sound
 	UPROPERTY(EditAnywhere)
-	USoundWave* attackSound;
+		USoundWave* attackSound;
 	UPROPERTY(EditAnywhere)
-	USoundWave* hurtSound;
+		USoundWave* hurtSound;
 	UPROPERTY(EditAnywhere)
 		USoundWave* dieSound;
 	UAudioComponent* myAudio;
+
+	//Animation
+	UEnemyAnimInstance* anim;
+
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -86,12 +99,12 @@ protected:
 
 	bool canAttack;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float damage);
+		void TakeDamage(float damage);
 	void LookTarget();
 	void FollowTarget(float deltaTime);
 	void Avoidance(float deltaTime);
@@ -101,4 +114,5 @@ public:
 
 	//Sound
 	void PlaySound(USoundWave* sound);
+
 };

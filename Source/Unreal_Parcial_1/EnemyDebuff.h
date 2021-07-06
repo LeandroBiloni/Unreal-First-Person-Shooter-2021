@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
+#include "EnemyAnimInstance.h"
 #include "MyCharacter.h"
 #include "EnemyDebuff.generated.h"
 
@@ -14,15 +15,16 @@ enum class EEnemyBehaviours : uint8
 	BE_Follow UMETA(DisplayName = "Follow"),
 	BE_LookPlayer UMETA(DisplayName = "Look"),
 	BE_Avoidance UMETA(DisplayName = "Avoid"),
-	BE_Attack UMETA(DisplayName = "Attack")
+	BE_Attack UMETA(DisplayName = "Attack"),
+	BE_Dead UMETA(DisplayName = "Dead")
 };
 
 UCLASS()
 class UNREAL_PARCIAL_1_API AEnemyDebuff : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AEnemyDebuff();
 
@@ -42,6 +44,8 @@ public:
 		float AvoidWeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AActor* ClosestObstacle;
+	UPROPERTY(EditAnywhere)
+		float range = 250.0f;
 	UPROPERTY(EditAnywhere)
 		float AttackRange = 50.0f;
 
@@ -73,15 +77,19 @@ public:
 	UPROPERTY(EditAnywhere)
 		USoundWave* dieSound;
 	UAudioComponent* myAudio;
+
+	//Animation
+	UEnemyAnimInstance* anim;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere)
-		int MaxLife;
+		float MaxLife;
 	UPROPERTY(EditAnywhere)
-		int CurrentLife;
+		float CurrentLife;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
