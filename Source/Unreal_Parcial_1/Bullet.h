@@ -26,6 +26,11 @@ public:
 
 	AActor* Owner;
 
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* FireMaterial;
+
+	UMaterialInstanceDynamic* CopyMaterial;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,5 +44,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void ChangeToFire();
 
 };

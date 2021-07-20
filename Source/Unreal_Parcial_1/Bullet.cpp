@@ -36,6 +36,16 @@ void ABullet::Tick(float DeltaTime)
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * DeltaTime);
 }
 
+void ABullet::ChangeToFire()
+{
+	UStaticMeshComponent* Mesh = FindComponentByClass<UStaticMeshComponent>();
+	if (Mesh) 
+	{
+		CopyMaterial = UMaterialInstanceDynamic::Create(FireMaterial, this);
+		Mesh->SetMaterial(0, CopyMaterial);
+	}
+}
+
 void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 

@@ -142,6 +142,18 @@ void AMyCharacter::Shoot()
 		SpawnParams.Instigator = GetInstigator();
 
 		ABullet* bullet = World->SpawnActor<ABullet>(bulletPrefab, MuzzleLoaction, MuzzleRotation, SpawnParams);
+
+		if (FireActive)
+		{
+			bullet->Damage = FireShotsDamage;
+			bullet->ChangeToFire();
+			FireShotsAmount--;
+
+			if (FireShotsAmount == 0)
+			{
+				FireActive = false;
+			}
+		}
 	}
 	//Esto
 	UE_LOG(LogTemp, Warning, TEXT("current time a 0"));

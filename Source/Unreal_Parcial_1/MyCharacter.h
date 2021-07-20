@@ -24,6 +24,16 @@ public:
 	//Este cambio
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float shootTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		bool FireActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		int FireShotsAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		int FireShotsDamage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float debuffShootTimer = 3.0f;
 	float originalShootTimer;
