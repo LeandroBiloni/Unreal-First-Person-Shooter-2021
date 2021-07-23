@@ -45,12 +45,18 @@ void AMyCharacter::BeginPlay()
 		anim = Cast<UMyAnimInstance>(sk->GetAnimInstance());
 
 	MyPlayerControllerReference = CastChecked<AMyPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	UWorld* World = GetWorld();
+	WorldName = World->GetName();
 }
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (WorldName == "Menu" || WorldName == "Win" || WorldName == "Lose") return;
+
 	if (!canShoot)
 	{
 		currentTime += DeltaTime;

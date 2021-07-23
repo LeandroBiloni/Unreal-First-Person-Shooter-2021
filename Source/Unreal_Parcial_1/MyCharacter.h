@@ -86,6 +86,8 @@ public:
 	//Para el UI
 	class AMyPlayerController* MyPlayerControllerReference;
 
+	FString WorldName;
+
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")

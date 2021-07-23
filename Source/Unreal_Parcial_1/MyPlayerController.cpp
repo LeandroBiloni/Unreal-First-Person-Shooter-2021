@@ -7,9 +7,15 @@ void AMyPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetHUDOnScreen();
-	SetActiveFirePowerUpHud(ESlateVisibility::Hidden);
-	SetStunHud(ESlateVisibility::Hidden);
+	UWorld* World = GetWorld();
+	FString Name = World->GetName();
+	if (Name != "Menu" && Name != "Win" && Name != "Lose")
+	{
+		SetHUDOnScreen();
+		SetActiveFirePowerUpHud(ESlateVisibility::Hidden);
+		SetStunHud(ESlateVisibility::Hidden);
+	}
+	
 	/*UWorld* World = GetWorld();
 	FString Name = World->GetName();
 	if (PrefabCanvas && Name != "Menu" && Name != "Win" && Name != "Lose")
