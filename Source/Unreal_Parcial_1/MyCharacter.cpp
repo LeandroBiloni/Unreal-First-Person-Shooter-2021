@@ -4,6 +4,8 @@
 #include "MyCharacter.h"
 #include "Bullet.h"
 #include "MySceneManager.h"
+#include "MyPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
@@ -41,6 +43,8 @@ void AMyCharacter::BeginPlay()
 	USkeletalMeshComponent* sk = FindComponentByClass< USkeletalMeshComponent>();
 	if (sk)
 		anim = Cast<UMyAnimInstance>(sk->GetAnimInstance());
+
+	MyPlayerControllerReference = CastChecked<AMyPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 }
 
 // Called every frame
@@ -48,7 +52,11 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (!canShoot)
+	{
 		currentTime += DeltaTime;
+		UpdateCooldownBarUI();
+	}
+		
 	if (currentTime >= shootTimer)
 		canShoot = true;
 
@@ -148,10 +156,11 @@ void AMyCharacter::Shoot()
 			bullet->Damage = FireShotsDamage;
 			bullet->ChangeToFire();
 			FireShotsAmount--;
-
+			MyPlayerControllerReference->UpdateFireAmountHud(FireShotsAmount);
 			if (FireShotsAmount == 0)
 			{
 				FireActive = false;
+				MyPlayerControllerReference->SetActiveFirePowerUpHud(ESlateVisibility::Hidden);
 			}
 		}
 	}
@@ -190,6 +199,25 @@ void AMyCharacter::GetDamage(float damage)
 	PlaySound(hurtSound);
 	//Animacion
 	anim->isHit = true;
+	UpdateLifeBarUI();
+}
+
+void AMyCharacter::UpdateLifeBarUI()
+{
+	if (MyPlayerControllerReference != nullptr) 
+	{
+		const float LifePercentValue = currentLife / maxLife;
+		MyPlayerControllerReference->UpdateLifeBarHud(LifePercentValue);
+	}
+}
+
+void AMyCharacter::UpdateCooldownBarUI()
+{
+	if (MyPlayerControllerReference != nullptr)
+	{
+		const float CooldownPercentValue = currentTime / originalShootTimer;
+		MyPlayerControllerReference->UpdateCooldownBarHud(CooldownPercentValue);
+	}
 }
 
 void AMyCharacter::AddLife(float value)
@@ -197,6 +225,7 @@ void AMyCharacter::AddLife(float value)
 	currentLife += value;
 	if (currentLife > maxLife)
 		currentLife = maxLife;
+	UpdateLifeBarUI();
 }
 
 void AMyCharacter::PlaySound(USoundWave* sound)
@@ -204,4 +233,13 @@ void AMyCharacter::PlaySound(USoundWave* sound)
 	MyAudio->Stop();
 	MyAudio->Sound = sound;
 	MyAudio->Play();
+}
+
+void AMyCharacter::ActivateFirePower(int ShotsAmount, int ShotsDamage) 
+{
+	FireActive = true;
+	FireShotsAmount = ShotsAmount;
+	FireShotsDamage = ShotsDamage;
+	MyPlayerControllerReference->SetActiveFirePowerUpHud(ESlateVisibility::Visible);
+	MyPlayerControllerReference->UpdateFireAmountHud(FireShotsAmount);
 }

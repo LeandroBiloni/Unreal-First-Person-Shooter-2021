@@ -83,6 +83,9 @@ public:
 	UMyAnimInstance* anim;
 	FVector2D myDir;
 
+	//Para el UI
+	class AMyPlayerController* MyPlayerControllerReference;
+
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(EditDefaultsOnly, Category = "Level name")
@@ -115,4 +118,10 @@ public:
 
 	//Sound
 	void PlaySound(USoundWave* sound);
+
+	void UpdateLifeBarUI();
+	void UpdateCooldownBarUI();
+
+	UFUNCTION(BlueprintCallable)
+		void ActivateFirePower(int ShotsAmount, int ShotsDamage);
 };

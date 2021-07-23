@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "MyUserWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UNREAL_PARCIAL_1_API UMyUserWidget : public UUserWidget
 {

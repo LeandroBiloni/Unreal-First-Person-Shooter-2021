@@ -23,5 +23,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UUserWidget* CurrentUI;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetHUDOnScreen();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateLifeBarHud(const float LifeValuePercent);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateCooldownBarHud(const float CooldownPercentValue);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetActiveFirePowerUpHud(ESlateVisibility state);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateFireAmountHud(const int ShotsAmount);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetStunHud(ESlateVisibility state);
+
 	virtual void BeginPlay() override;
 };

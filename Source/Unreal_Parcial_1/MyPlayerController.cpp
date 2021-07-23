@@ -7,7 +7,10 @@ void AMyPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UWorld* World = GetWorld();
+	SetHUDOnScreen();
+	SetActiveFirePowerUpHud(ESlateVisibility::Hidden);
+	SetStunHud(ESlateVisibility::Hidden);
+	/*UWorld* World = GetWorld();
 	FString Name = World->GetName();
 	if (PrefabCanvas && Name != "Menu" && Name != "Win" && Name != "Lose")
 	{
@@ -18,5 +21,5 @@ void AMyPlayerController::BeginPlay()
 		{
 			CurrentUI->AddToViewport();
 		}
-	}
+	}*/
 }
