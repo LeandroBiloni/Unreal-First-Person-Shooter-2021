@@ -57,7 +57,7 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	if (WorldName == "Menu" || WorldName == "Win" || WorldName == "Lose") return;
 
-	if (!canShoot)
+	if (!canShoot && !isStun)
 	{
 		currentTime += DeltaTime;
 		UpdateCooldownBarUI();
@@ -65,6 +65,13 @@ void AMyCharacter::Tick(float DeltaTime)
 		
 	if (currentTime >= shootTimer)
 		canShoot = true;
+
+	if (isStun)
+	{
+		timeStunned += DeltaTime;
+		if (timeStunned >= stunTimer)
+			isStun = false;
+	}
 
 	if (TakeDamage)
 	{
@@ -99,44 +106,45 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::MoveForward(float f)
 {
-	if (Controller && f != 0.0)
+	if (Controller && f != 0.0 && !isStun)
 	{
 		FRotator rot = Controller->GetControlRotation();
 		FRotator myYaw(0, rot.Yaw, 0);
 		FVector dir = FRotationMatrix(myYaw).GetUnitAxis(EAxis::X);
 		AddMovementInput(dir, f);
-		//Animacion
-		myDir.Y = f;
 	}
+	//Animacion
+	myDir.Y = f;
 }
 
 void AMyCharacter::MoveRight(float f)
 {
-	if (Controller && f != 0.0)
+	if (Controller && f != 0.0 && !isStun)
 	{
 		FRotator rot = Controller->GetControlRotation();
 		FRotator myYaw(0, rot.Yaw, 0);
 		FVector dir = FRotationMatrix(myYaw).GetUnitAxis(EAxis::Y);
 		AddMovementInput(dir, f);
-		//Animacion
-		myDir.X = f;
 	}
+	//Animacion
+	myDir.X = f;
 }
 
 void AMyCharacter::MouseX(float f)
 {
+	if (isStun) return;
 	AddControllerYawInput(f);
 }
 
 void AMyCharacter::MouseY(float f)
 {
+	if (isStun) return;
 	AddControllerPitchInput(f);
 }
 
 void AMyCharacter::Shoot()
 {
-	//Esto
-	if (!canShoot) return;
+	if (!canShoot || isStun) return;
 	UE_LOG(LogTemp, Warning, TEXT("Shoot check"));
 
 	FVector CameraLocation;
@@ -170,7 +178,7 @@ void AMyCharacter::Shoot()
 			}
 		}
 	}
-	//Esto
+	
 	UE_LOG(LogTemp, Warning, TEXT("current time a 0"));
 	currentTime = 0;
 	canShoot = false;

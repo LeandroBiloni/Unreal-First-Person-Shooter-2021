@@ -43,6 +43,12 @@ public:
 
 	bool canShoot;
 
+	//Stun
+	bool isStun;
+	float timeStunned;
+	UPROPERTY(EditAnywhere)
+		float stunTimer = 1.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 	UPROPERTY(EditAnywhere)

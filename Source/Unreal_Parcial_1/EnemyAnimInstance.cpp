@@ -17,3 +17,8 @@ void UEnemyAnimInstance::EndAttack()
 {
 	isAttacking = false;
 }
+
+void UEnemyAnimInstance::Die()
+{
+	isDead = true;
+}
