@@ -132,4 +132,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void ActivateFirePower(int ShotsAmount, int ShotsDamage);
+
+	void StunThisUnit();
 };

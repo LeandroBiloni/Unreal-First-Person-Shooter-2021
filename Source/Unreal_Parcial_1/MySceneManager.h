@@ -38,6 +38,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void LoadThirdLevel();
 
+	UFUNCTION(BlueprintCallable)
+		void LoadFourthLevel();
 
 	UFUNCTION(BlueprintCallable)
 	void Win();

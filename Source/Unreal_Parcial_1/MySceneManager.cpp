@@ -40,6 +40,11 @@ void AMySceneManager::LoadThirdLevel()
 	UGameplayStatics::OpenLevel(GetWorld(), "Lvl3");
 }
 
+void AMySceneManager::LoadFourthLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Lvl4");
+}
+
 void AMySceneManager::Win()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "Win");

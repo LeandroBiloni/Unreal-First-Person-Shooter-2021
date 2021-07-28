@@ -186,7 +186,7 @@ void AEnemyStunner::Attack()
 {
 	//logica de ataque que estunee al player.
 	Player->GetDamage(myDamage);
-	Player->isStun = true;
+	Player->StunThisUnit();
 
 	if (anim)
 	{

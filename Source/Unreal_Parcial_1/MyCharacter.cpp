@@ -69,8 +69,12 @@ void AMyCharacter::Tick(float DeltaTime)
 	if (isStun)
 	{
 		timeStunned += DeltaTime;
-		if (timeStunned >= stunTimer)
+		if (timeStunned >= stunTimer) 
+		{
 			isStun = false;
+			MyPlayerControllerReference->SetStunHud(ESlateVisibility::Hidden);
+		}
+			
 	}
 
 	if (TakeDamage)
@@ -256,4 +260,9 @@ void AMyCharacter::ActivateFirePower(int ShotsAmount, int ShotsDamage)
 	FireShotsDamage = ShotsDamage;
 	MyPlayerControllerReference->SetActiveFirePowerUpHud(ESlateVisibility::Visible);
 	MyPlayerControllerReference->UpdateFireAmountHud(FireShotsAmount);
+}
+void AMyCharacter::StunThisUnit()
+{
+	isStun = true;
+	MyPlayerControllerReference->SetStunHud(ESlateVisibility::Visible);
 }
