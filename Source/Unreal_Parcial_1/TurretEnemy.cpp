@@ -108,7 +108,7 @@ void ATurretEnemy::Shoot()
 
 	if (world) 
 	{
-		world->SpawnActor<ABullet>(bulletPrefab, cannon->GetComponentLocation(), cannon->GetComponentRotation());
+		world->SpawnActor<ABullet>(bulletPrefab, spawn->GetComponentLocation(), cannon->GetComponentRotation());
 	}
 
 	//Sound
