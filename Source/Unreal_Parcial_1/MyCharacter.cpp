@@ -200,7 +200,7 @@ void AMyCharacter::Debuff(bool isDebuff)
 		shootTimer = debuffShootTimer;
 	else
 		shootTimer = originalShootTimer;
-
+	HasDebuff = isDebuff;
 	//UE_LOG(LogTemp, Warning, TEXT("ShootTimer = %s"), (isDebuff ? TEXT("Debuff True") : TEXT("Debuff False")));
 	//UE_LOG(LogTemp, Warning, TEXT("ShootTimer = %f"), shootTimer);
 
@@ -233,7 +233,7 @@ void AMyCharacter::UpdateCooldownBarUI()
 {
 	if (MyPlayerControllerReference != nullptr)
 	{
-		const float CooldownPercentValue = currentTime / originalShootTimer;
+		const float CooldownPercentValue = currentTime / shootTimer;
 		MyPlayerControllerReference->UpdateCooldownBarHud(CooldownPercentValue);
 	}
 }

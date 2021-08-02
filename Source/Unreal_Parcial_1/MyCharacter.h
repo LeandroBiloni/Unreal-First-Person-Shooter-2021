@@ -37,6 +37,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float debuffShootTimer = 3.0f;
 	float originalShootTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		bool HasDebuff;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		//Este cambio
 		float currentTime;
