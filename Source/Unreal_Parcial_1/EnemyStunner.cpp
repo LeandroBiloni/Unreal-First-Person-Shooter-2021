@@ -39,12 +39,10 @@ void AEnemyStunner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (myEnum == EEnemyStunnerBehaviours::BE_Dead || anim->isDead)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EMPIEZO TIMER %f"), DeadTime);
 		Sphere->SetSphereRadius(0.0f);
 		DeadTime += DeltaTime;
 		if (DeadTime >= 5)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("DESTROY"));
 			Destroy();
 		}
 		return;
@@ -129,6 +127,7 @@ void AEnemyStunner::LookTarget()
 
 	if (dir.Size() <= range)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("LOOK CAMBIA A FOLLOW"));
 		myEnum = EEnemyStunnerBehaviours::BE_Follow;
 	}
 }
@@ -136,7 +135,17 @@ void AEnemyStunner::LookTarget()
 void AEnemyStunner::FollowTarget(float deltaTime)
 {
 	LookTarget();
+
+	if (Player == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("player null"));
+		return;
+	}
+
+
 	SetActorLocation(GetActorLocation() + GetActorForwardVector() * Speed * deltaTime);
+
+
 
 	//Animation
 	if (anim)
@@ -147,11 +156,13 @@ void AEnemyStunner::FollowTarget(float deltaTime)
 	FVector distToPlayer = Player->GetActorLocation() - GetActorLocation();
 	if (distToPlayer.Size() > range)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("FOLLO CAMBIA A LOOK"));
 		myEnum = EEnemyStunnerBehaviours::BE_LookPlayer;
 	}
 
 	if (distToPlayer.Size() <= AttackRange)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("FOLLO CAMBIA A ATTACK"));
 		myEnum = EEnemyStunnerBehaviours::BE_Attack;
 	}
 }
@@ -187,6 +198,8 @@ void AEnemyStunner::Attack()
 	//logica de ataque que estunee al player.
 	Player->GetDamage(myDamage);
 	Player->StunThisUnit();
+
+	UE_LOG(LogTemp, Warning, TEXT("stuneo player"));
 
 	if (anim)
 	{

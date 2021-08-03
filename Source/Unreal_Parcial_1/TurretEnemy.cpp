@@ -48,11 +48,9 @@ void ATurretEnemy::Tick(float DeltaTime)
 
 	if (isDead)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EMPIEZO TIMER %f"), DeadTime);
 		DeadTime += DeltaTime;
 		if (DeadTime >= 5)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("DESTROY"));
 			Destroy();
 		}
 		return;

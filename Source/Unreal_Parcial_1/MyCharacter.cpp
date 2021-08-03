@@ -68,11 +68,13 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	if (isStun)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("estoy stuneado"));
 		timeStunned += DeltaTime;
 		if (timeStunned >= stunTimer) 
 		{
 			isStun = false;
 			MyPlayerControllerReference->SetStunHud(ESlateVisibility::Hidden);
+			UE_LOG(LogTemp, Warning, TEXT("se termino el stun"));
 		}
 			
 	}
@@ -263,6 +265,8 @@ void AMyCharacter::ActivateFirePower(int ShotsAmount, int ShotsDamage)
 }
 void AMyCharacter::StunThisUnit()
 {
+	timeStunned = 0;
 	isStun = true;
 	MyPlayerControllerReference->SetStunHud(ESlateVisibility::Visible);
+	UE_LOG(LogTemp, Warning, TEXT("stuneado"));
 }
